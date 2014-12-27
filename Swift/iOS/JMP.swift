@@ -2,6 +2,65 @@ import	UIKit
 import	AddressBook
 
 func
+HexChar( p: Int ) -> Character {
+	return [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" ][ p & 0x0f ];
+}
+
+func
+HexString( p: NSData ) -> String {
+	let	wBytes = UnsafePointer<Int8>( p.bytes )
+	var	v: String = ""
+	for i in 0 ..< p.length {
+		v.append( HexChar( Int( wBytes[ i ] ) >> 4 ) )
+		v.append( HexChar( Int( wBytes[ i ] ) ) )
+	}
+	return v
+}
+
+func
+RandomData( p: Int ) -> NSData {
+	let wFD = open( "/dev/random", O_RDONLY )
+	assert( wFD > 2 )
+	var w = [ UInt8 ]( count: p, repeatedValue: 0 )
+	read( wFD, &w, UInt( p ) )
+	close( wFD )
+	return NSData( bytes: w, length: p )
+}
+
+func
+UTF8Data( p: String ) -> NSData {
+	let	v = p.dataUsingEncoding( NSUTF8StringEncoding )
+	assert( v != nil )
+	return v!
+}
+
+func
+UTF8String( p: NSData ) -> String {
+	let	v = NSString( data:p, encoding: NSUTF8StringEncoding )
+	assert( v != nil )
+	return v!
+}
+
+func
+UTF8String( p: UnsafePointer<UInt8>, length: Int ) -> String {
+	let	v = NSString( bytes: p, length: length, encoding: NSUTF8StringEncoding )
+	assert( v != nil )
+	return v!
+}
+
+func
+Base64String( p: NSData, options: NSDataBase64EncodingOptions = nil ) -> String {
+	return p.base64EncodedStringWithOptions( options )
+}
+
+func
+Base64Data( p: String, options: NSDataBase64DecodingOptions = .IgnoreUnknownCharacters ) -> NSData {
+	let	v = NSData( base64EncodedString: p, options: options )
+	assert( v != nil )
+	return v!
+}
+
+func
 InputBox(
 	title		:	String!
 ,	message		:	String! = nil
