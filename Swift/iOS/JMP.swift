@@ -84,9 +84,9 @@ InputBox(
 	
 func
 Animation(
-	animations	:	( () -> Void )
+	animations	:	() -> ()
 ,	duration	:	NSTimeInterval			= 0.25
-,	completion	:	( ( Bool ) -> Void )!	= nil
+,	completion	:	( Bool -> Void )!		= nil
 ,	delay		:	NSTimeInterval			= 0
 ,	options		:	UIViewAnimationOptions	= .CurveEaseInOut
 ) {
@@ -100,9 +100,9 @@ Animation(
 
 func
 SpringAnimation(
-	animations	:	( () -> Void )
+	animations	:	() -> ()
 ,	duration	:	NSTimeInterval			= 0.25
-,	completion	:	( ( Bool ) -> Void )!	= nil
+,	completion	:	( Bool -> Void )!		= nil
 ,	delay		:	NSTimeInterval			= 0
 ,	options		:	UIViewAnimationOptions	= .CurveEaseInOut
 ,	damping		:	CGFloat					= 0.5
@@ -120,8 +120,8 @@ SpringAnimation(
 
 func
 BlockAlert(
-	_	title	:	String! = nil
-,	_	message	:	String! = nil
+  _	title	:	String! = nil
+, _	message	:	String! = nil
 ) {
 	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
 		UIAlertController(
