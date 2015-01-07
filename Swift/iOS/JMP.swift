@@ -61,6 +61,16 @@ Base64Data( p: String, options: NSDataBase64DecodingOptions = .IgnoreUnknownChar
 }
 
 func
+EncodeJSON( p: AnyObject, options: NSJSONWritingOptions = nil ) -> NSData {
+	return NSJSONSerialization.dataWithJSONObject( p, options: options, error: nil )!
+}
+
+func
+DecodeJSON( p: NSData, options: NSJSONReadingOptions = nil ) -> AnyObject {
+	return NSJSONSerialization.JSONObjectWithData( p, options: options, error: nil )!
+}
+
+func
 InputBox(
 	title		:	String!
 ,	message		:	String! = nil
@@ -148,6 +158,18 @@ ErrorAlert( p: NSError ) {
 	,	completion:nil
 	)
 }
+
+func
+Notification( name: String, p: ( ( NSNotification! ) -> Void )! ) -> NSObjectProtocol! {
+	return NSNotificationCenter.defaultCenter().addObserverForName(
+		name
+	,	object				:	nil
+	,	queue				:	NSOperationQueue.mainQueue()
+	,	usingBlock			:	p
+	)
+}
+
+
 /*
 class
 JMPSAddressBook : NSObject {
