@@ -133,6 +133,21 @@ BlockAlert(
 	,	completion:nil
 	)
 }
+
+func
+ErrorAlert( p: NSError ) {
+	let wAC = UIAlertController(
+		title			:	"\(p.domain):\(p.code)"
+	,	message			:	p.localizedDescription
+	,	preferredStyle	:	.Alert
+	)
+	wAC.addAction( UIAlertAction( title: "OK", style: .Cancel, handler: nil ) )
+	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
+		wAC
+	,	animated:true
+	,	completion:nil
+	)
+}
 /*
 class
 JMPSAddressBook : NSObject {

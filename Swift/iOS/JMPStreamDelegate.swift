@@ -32,11 +32,16 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 			,	kCFStreamSocketSecurityLevelNegotiatedSSL
 			,	kCFStreamPropertySocketSecurityLevel
 			)
+#if	DEBUG
+			let	validate = false	// false for ignoring
+#else
+			let	validate = true
+#endif
 
 			CFWriteStreamSetProperty(
 				outputStream
 			,	kCFStreamPropertySSLSettings
-			,	[ kCFStreamSSLValidatesCertificateChain as String: true ]	// false for ignoring
+			,	[ kCFStreamSSLValidatesCertificateChain as String: validate ]
 			)
 		}
 
@@ -131,22 +136,22 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 
 	func
 	stream(
-		stream	:	NSStream
-	,	event	:	NSStreamEvent
+		theStream	:	NSStream
+	,	handleEvent	:	NSStreamEvent
 	) {
-		switch event {
+		switch handleEvent {
 		case NSStreamEvent.HasBytesAvailable:
 			let	wData = NSMutableData( length: 4096 )!
-			wData.length = ( stream as NSInputStream ).read( UnsafeMutablePointer<UInt8>( wData.mutableBytes ), maxLength:wData.length )
+			wData.length = ( theStream as NSInputStream ).read( UnsafeMutablePointer<UInt8>( wData.mutableBytes ), maxLength:wData.length )
 			dataHandler( wData )
 		case NSStreamEvent.OpenCompleted:
-			openHandler( stream )
+			openHandler( theStream )
 		case NSStreamEvent.HasSpaceAvailable:
 			_Write()
 		case NSStreamEvent.ErrorOccurred:
-			errorHandler( stream )
+			errorHandler( theStream )
 		case NSStreamEvent.EndEncountered:
-			endHandler( stream )
+			endHandler( theStream )
 		case NSStreamEvent.None:
 			break
 		default:
