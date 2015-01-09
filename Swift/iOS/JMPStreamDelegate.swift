@@ -1,5 +1,12 @@
 import Foundation
 
+enum
+SSLMode {
+	case No
+	case ValidateCertificate
+	case BypassValidation
+}
+
 class
 JMPStreamDelegate: NSObject, NSStreamDelegate {
 
@@ -22,26 +29,20 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 	}
 
 	func
-	Setup( secure: Bool ) {
+	Setup( sslMode: SSLMode ) {
 		CFReadStreamSetProperty( inputStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue )
 		CFWriteStreamSetProperty( outputStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue )
 
-		if secure {
+		if sslMode == .ValidateCertificate || sslMode == .BypassValidation {
 			CFWriteStreamSetProperty(
 				outputStream
 			,	kCFStreamSocketSecurityLevelNegotiatedSSL
 			,	kCFStreamPropertySocketSecurityLevel
 			)
-#if	DEBUG
-			let	validate = false	// false for ignoring
-#else
-			let	validate = true
-#endif
-
 			CFWriteStreamSetProperty(
 				outputStream
 			,	kCFStreamPropertySSLSettings
-			,	[ kCFStreamSSLValidatesCertificateChain as String: validate ]
+			,	[ kCFStreamSSLValidatesCertificateChain as String: sslMode == .ValidateCertificate ]
 			)
 		}
 
@@ -57,13 +58,13 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 	}
 
 	init(
-		host			:	String
-	,	port			:	Int
-	,	secure			:	Bool
-	,	openHandler		:	NSStream	-> ()
-	,	dataHandler		:	NSData		-> ()
-	,	errorHandler	:	NSStream	-> ()
-	,	endHandler		:	NSStream	-> ()
+		host			: String
+	,	port			: Int
+	,	sslMode			: SSLMode
+	,	openHandler		: NSStream	-> ()
+	,	dataHandler		: NSData	-> ()
+	,	errorHandler	: NSStream	-> ()
+	,	endHandler		: NSStream	-> ()
 	) {
 		self.openHandler	= openHandler
 		self.dataHandler	= dataHandler
@@ -85,16 +86,16 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 
 		super.init()
 
-		Setup( secure )
+		Setup( sslMode )
 	}
 
 	init(
-	_	socket			:	CFSocketNativeHandle
-	,	secure			:	Bool
-	,	openHandler		:	NSStream	-> ()
-	,	dataHandler		:	NSData		-> ()
-	,	errorHandler	:	NSStream	-> ()
-	,	endHandler		:	NSStream	-> ()
+	_	socket			: CFSocketNativeHandle
+	,	sslMode			: SSLMode
+	,	openHandler		: NSStream	-> ()
+	,	dataHandler		: NSData	-> ()
+	,	errorHandler	: NSStream	-> ()
+	,	endHandler		: NSStream	-> ()
 	) {
 		self.openHandler	= openHandler
 		self.dataHandler	= dataHandler
@@ -116,7 +117,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 
 		super.init()
 
-		Setup( secure )
+		Setup( sslMode )
 	}
 
 	private	func
@@ -159,6 +160,9 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 		}
 	}
 }
-//			var	wBuffer:	UnsafeMutablePointer<UnsafeMutablePointer<UInt8>> = nil
-//			var	wLength:	UnsafeMutablePointer<Int> = nil
-//			if inputStream.getBuffer( wBuffer, length: wLength ) { dataHandler( NSData( bytes:wBuffer.memory, length:wLength.memory ) ) }
+
+//			var	wBuffer = UnsafeMutablePointer<UInt8>( [ Int8 ]( count: 4096, repeatedValue: 0 ) )
+//			var	wLength = 4096
+//			let x = inputStream.getBuffer( &wBuffer, length: &wLength )
+//			dataHandler( NSData( bytes:wBuffer, length:wLength ) )
+

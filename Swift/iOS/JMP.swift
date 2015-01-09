@@ -28,24 +28,18 @@ RandomData( p: Int ) -> NSData {
 }
 
 func
-UTF8Data( p: String ) -> NSData {
-	let	v = p.dataUsingEncoding( NSUTF8StringEncoding )
-	assert( v != nil )
-	return v!
+UTF8Data( p: String ) -> NSData? {
+	return p.dataUsingEncoding( NSUTF8StringEncoding )
 }
 
 func
-UTF8String( p: NSData ) -> String {
-	let	v = NSString( data:p, encoding: NSUTF8StringEncoding )
-	assert( v != nil )
-	return v!
+UTF8String( p: NSData ) -> String? {
+	return NSString( data:p, encoding: NSUTF8StringEncoding )
 }
 
 func
-UTF8String( p: UnsafePointer<UInt8>, length: Int ) -> String {
-	let	v = NSString( bytes: p, length: length, encoding: NSUTF8StringEncoding )
-	assert( v != nil )
-	return v!
+UTF8String( p: UnsafePointer<UInt8>, length: Int ) -> String? {
+	return NSString( bytes: p, length: length, encoding: NSUTF8StringEncoding )
 }
 
 func
@@ -54,20 +48,18 @@ Base64String( p: NSData, options: NSDataBase64EncodingOptions = nil ) -> String 
 }
 
 func
-Base64Data( p: String, options: NSDataBase64DecodingOptions = .IgnoreUnknownCharacters ) -> NSData {
-	let	v = NSData( base64EncodedString: p, options: options )
-	assert( v != nil )
-	return v!
+Base64Data( p: String, options: NSDataBase64DecodingOptions = .IgnoreUnknownCharacters ) -> NSData? {
+	return NSData( base64EncodedString: p, options: options )
 }
 
 func
-EncodeJSON( p: AnyObject, options: NSJSONWritingOptions = nil ) -> NSData {
-	return NSJSONSerialization.dataWithJSONObject( p, options: options, error: nil )!
+EncodeJSON( p: AnyObject, options: NSJSONWritingOptions = nil ) -> NSData? {
+	return NSJSONSerialization.dataWithJSONObject( p, options: options, error: nil )
 }
 
 func
-DecodeJSON( p: NSData, options: NSJSONReadingOptions = nil ) -> AnyObject {
-	return NSJSONSerialization.JSONObjectWithData( p, options: options, error: nil )!
+DecodeJSON( p: NSData, options: NSJSONReadingOptions = nil ) -> AnyObject? {
+	return NSJSONSerialization.JSONObjectWithData( p, options: options, error: nil )
 }
 
 func
@@ -160,13 +152,20 @@ ErrorAlert( p: NSError ) {
 }
 
 func
-Notification( name: String, p: ( ( NSNotification! ) -> Void )! ) -> NSObjectProtocol! {
+Notification( name: String, p: ( ( NSNotification! ) -> Void )!, queue: NSOperationQueue! = nil ) -> NSObjectProtocol! {
 	return NSNotificationCenter.defaultCenter().addObserverForName(
 		name
 	,	object				:	nil
-	,	queue				:	NSOperationQueue.mainQueue()
+	,	queue				:	queue
 	,	usingBlock			:	p
 	)
+}
+
+func
+Dist2( left: CGPoint, right: CGPoint ) -> Double {
+	let w = Double( right.x - left.x )
+	let h = Double( right.y - left.y )
+	return w * w + h * h
 }
 
 
