@@ -21,16 +21,6 @@ DumpTV( p: UIScrollView ) {
 	NSLog( "Current Bottom:%f", CGRectGetMaxY( p.bounds ) - p.contentInset.bottom );
 }
 
-func
-Notification( pName: String, p: ( ( NSNotification! ) -> Void )! ) -> NSObjectProtocol! {
-	return NSNotificationCenter.defaultCenter().addObserverForName(
-		pName
-	,	object				:	nil
-	,	queue				:	NSOperationQueue.mainQueue()
-	,	usingBlock			:	p
-	)
-}
-
 class
 JMPScrollControlVC: UIViewController {
 

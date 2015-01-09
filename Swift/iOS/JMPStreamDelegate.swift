@@ -1,7 +1,8 @@
 import Foundation
 
 enum
-SSLMode {
+TLSMode {
+	case Automatic	//	Follow URL, i.e. https, wss
 	case No
 	case ValidateCertificate
 	case BypassValidation
@@ -29,11 +30,11 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 	}
 
 	func
-	Setup( sslMode: SSLMode ) {
+	Setup( tlsMode: TLSMode ) {
 		CFReadStreamSetProperty( inputStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue )
 		CFWriteStreamSetProperty( outputStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue )
 
-		if sslMode == .ValidateCertificate || sslMode == .BypassValidation {
+		if tlsMode == .ValidateCertificate || tlsMode == .BypassValidation {
 			CFWriteStreamSetProperty(
 				outputStream
 			,	kCFStreamSocketSecurityLevelNegotiatedSSL
@@ -42,7 +43,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 			CFWriteStreamSetProperty(
 				outputStream
 			,	kCFStreamPropertySSLSettings
-			,	[ kCFStreamSSLValidatesCertificateChain as String: sslMode == .ValidateCertificate ]
+			,	[ kCFStreamSSLValidatesCertificateChain as String: tlsMode == .ValidateCertificate ]
 			)
 		}
 
@@ -60,7 +61,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 	init(
 		host			: String
 	,	port			: Int
-	,	sslMode			: SSLMode
+	,	tlsMode			: TLSMode
 	,	openHandler		: NSStream	-> ()
 	,	dataHandler		: NSData	-> ()
 	,	errorHandler	: NSStream	-> ()
@@ -86,12 +87,12 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 
 		super.init()
 
-		Setup( sslMode )
+		Setup( tlsMode )
 	}
 
 	init(
 	_	socket			: CFSocketNativeHandle
-	,	sslMode			: SSLMode
+	,	tlsMode			: TLSMode
 	,	openHandler		: NSStream	-> ()
 	,	dataHandler		: NSData	-> ()
 	,	errorHandler	: NSStream	-> ()
@@ -117,7 +118,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 
 		super.init()
 
-		Setup( sslMode )
+		Setup( tlsMode )
 	}
 
 	private	func
