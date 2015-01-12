@@ -53,42 +53,52 @@ Base64Data( p: String, options: NSDataBase64DecodingOptions = .IgnoreUnknownChar
 }
 
 func
-EncodeJSON( p: AnyObject, options: NSJSONWritingOptions = nil ) -> NSData? {
-	return NSJSONSerialization.dataWithJSONObject( p, options: options, error: nil )
+EncodeJSON( p: AnyObject, options: NSJSONWritingOptions = nil, error: NSErrorPointer = nil ) -> NSData? {
+	return NSJSONSerialization.dataWithJSONObject( p, options: options, error: error )
 }
 
 func
-DecodeJSON( p: NSData, options: NSJSONReadingOptions = nil ) -> AnyObject? {
-	return NSJSONSerialization.JSONObjectWithData( p, options: options, error: nil )
+DecodeJSON( p: NSData, options: NSJSONReadingOptions = nil, error: NSErrorPointer = nil ) -> AnyObject? {
+	return NSJSONSerialization.JSONObjectWithData( p, options: options, error: error )
+}
+
+func
+IsNull( p: AnyObject? ) -> Bool {
+	if p == nil { return true }
+	return p is NSNull
 }
 
 func
 InputBox(
 	title		:	String!
 ,	message		:	String! = nil
-,	config		:	((UITextField!) -> Void)! = nil
-,	ok			:	((UITextField!) -> Void)
-) -> UIAlertController {
-	var v = UIAlertController(
+,	config		:	( UITextField! -> () )! = nil
+,	ok			:	( UITextField! -> () )
+) {
+	let wAC = UIAlertController(
 		title			:	title
 	,	message			:	message
 	,	preferredStyle	:	.Alert
 	)
 	var wTF : UITextField!
-	v.addTextFieldWithConfigurationHandler() { p in
+	wAC.addTextFieldWithConfigurationHandler() { p in
 		if config != nil { config( p ) }
 		wTF = p
 	}
-	v.addAction( UIAlertAction( title: "Cancel", style: .Cancel, handler:nil ) )
-	v.addAction( UIAlertAction( title: "OK", style: .Default ) { _ in ok( wTF ) } )
-	return v
+	wAC.addAction( UIAlertAction( title: "Cancel", style: .Cancel, handler:nil ) )
+	wAC.addAction( UIAlertAction( title: "OK", style: .Default ) { _ in ok( wTF ) } )
+	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
+		wAC
+	,	animated:true
+	,	completion:nil
+	)
 }
 	
 func
 Animation(
 	animations	:	() -> ()
 ,	duration	:	NSTimeInterval			= 0.25
-,	completion	:	( Bool -> Void )!		= nil
+,	completion	:	( Bool -> () )!			= nil
 ,	delay		:	NSTimeInterval			= 0
 ,	options		:	UIViewAnimationOptions	= .CurveEaseInOut
 ) {
@@ -104,7 +114,7 @@ func
 SpringAnimation(
 	animations	:	() -> ()
 ,	duration	:	NSTimeInterval			= 0.25
-,	completion	:	( Bool -> Void )!		= nil
+,	completion	:	( Bool -> () )!			= nil
 ,	delay		:	NSTimeInterval			= 0
 ,	options		:	UIViewAnimationOptions	= .CurveEaseInOut
 ,	damping		:	CGFloat					= 0.5
@@ -137,6 +147,25 @@ BlockAlert(
 }
 
 func
+Alert(
+  _	title	:	String! = nil
+, _	message	:	String! = nil
+) {
+	let wAC = UIAlertController(
+		title			:	title
+	,	message			:	message
+	,	preferredStyle	:	.Alert
+	)
+	wAC.addAction( UIAlertAction( title: "OK", style: .Cancel, handler: nil ) )
+	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
+		wAC
+	,	animated:true
+	,	completion:nil
+	)
+}
+
+
+func
 ErrorAlert( p: NSError ) {
 	let wAC = UIAlertController(
 		title			:	"\(p.domain):\(p.code)"
@@ -152,7 +181,7 @@ ErrorAlert( p: NSError ) {
 }
 
 func
-Notification( name: String, p: ( ( NSNotification! ) -> Void )!, queue: NSOperationQueue! = nil ) -> NSObjectProtocol! {
+Notification( name: String, p: ( NSNotification! -> () )!, queue: NSOperationQueue! = nil ) -> NSObjectProtocol! {
 	return NSNotificationCenter.defaultCenter().addObserverForName(
 		name
 	,	object				:	nil
@@ -181,9 +210,9 @@ JMPSAddressBook : NSObject {
 
 	func
 	grant(
-		granted	:	( ( JMPSAddressBook ) -> Void )!
-	,	denied	:	( () -> Void )!
-	,	error	:	( ( NSError! ) -> Void )!
+		granted	:	( JMPSAddressBook -> () )!
+	,	denied	:	( () -> () )!
+	,	error	:	( ( NSError! ) -> () )!
 	) {
 		switch ( ABAddressBookGetAuthorizationStatus() )
 		{

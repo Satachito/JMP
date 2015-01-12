@@ -1,11 +1,10 @@
 import Foundation
 
 enum
-TLSMode {
-	case Automatic	//	Follow URL, i.e. https, wss
-	case No
-	case ValidateCertificate
-	case BypassValidation
+TLSMode: Int {	//	If nit, it's automatic
+	case No						= 0
+	case ValidateCertificate	= 1
+	case BypassValidation		= 2
 }
 
 class
@@ -144,7 +143,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 		switch handleEvent {
 		case NSStreamEvent.HasBytesAvailable:
 			let	wData = NSMutableData( length: 4096 )!
-			wData.length = ( theStream as NSInputStream ).read( UnsafeMutablePointer<UInt8>( wData.mutableBytes ), maxLength:wData.length )
+			wData.length = inputStream.read( UnsafeMutablePointer<UInt8>( wData.mutableBytes ), maxLength:wData.length )
 			dataHandler( wData )
 		case NSStreamEvent.OpenCompleted:
 			openHandler( theStream )
