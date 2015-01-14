@@ -69,6 +69,15 @@ IsNull( p: AnyObject? ) -> Bool {
 }
 
 func
+Integer( p: AnyObject? ) -> Int {
+	if p == nil { return 0 }
+	if p is NSNumber { return ( p as NSNumber ).integerValue }
+	if p is String { return ( p as NSString ).integerValue }
+	return 0
+}
+
+
+func
 InputBox(
 	title		:	String!
 ,	message		:	String! = nil
