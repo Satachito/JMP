@@ -157,19 +157,21 @@ BlockAlert(
 
 func
 Alert(
-  _	title	:	String! = nil
-, _	message	:	String! = nil
+  _	title		:	String! = nil
+, _	message		:	String! = nil
+, _ handler		:	() -> () = {}
+, _ completion	:	() -> () = {}
 ) {
 	let wAC = UIAlertController(
 		title			:	title
 	,	message			:	message
 	,	preferredStyle	:	.Alert
 	)
-	wAC.addAction( UIAlertAction( title: "OK", style: .Cancel, handler: nil ) )
+	wAC.addAction( UIAlertAction( title: "OK", style: .Cancel, handler: { p in handler() } ) )
 	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
 		wAC
 	,	animated:true
-	,	completion:nil
+	,	completion:completion
 	)
 }
 
