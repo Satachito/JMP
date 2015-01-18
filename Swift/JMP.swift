@@ -76,6 +76,25 @@ Integer( p: AnyObject? ) -> Int {
 	return 0
 }
 
+func
+Dist2( left: CGPoint, right: CGPoint ) -> Double {
+	let w = Double( right.x - left.x )
+	let h = Double( right.y - left.y )
+	return w * w + h * h
+}
+
+func
+Notification( name: String, p: ( NSNotification! -> () )!, queue: NSOperationQueue! = nil ) -> NSObjectProtocol! {
+	return NSNotificationCenter.defaultCenter().addObserverForName(
+		name
+	,	object				:	nil
+	,	queue				:	queue
+	,	usingBlock			:	p
+	)
+}
+
+
+////////////////////////////////////////////////////////////////	iOS
 
 func
 InputBox(
@@ -191,23 +210,15 @@ ErrorAlert( p: NSError ) {
 	)
 }
 
-func
-Notification( name: String, p: ( NSNotification! -> () )!, queue: NSOperationQueue! = nil ) -> NSObjectProtocol! {
-	return NSNotificationCenter.defaultCenter().addObserverForName(
-		name
-	,	object				:	nil
-	,	queue				:	queue
-	,	usingBlock			:	p
-	)
+class
+V: UIView {
+	var	draw: CGRect -> () = { p in }
+	override func
+	drawRect( p: CGRect ) {
+		super.drawRect( p )
+		draw( p )
+	}
 }
-
-func
-Dist2( left: CGPoint, right: CGPoint ) -> Double {
-	let w = Double( right.x - left.x )
-	let h = Double( right.y - left.y )
-	return w * w + h * h
-}
-
 
 /*
 class
