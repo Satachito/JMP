@@ -99,8 +99,8 @@ Notification( name: String, p: ( NSNotification! -> () )!, queue: NSOperationQue
 func
 InputBox(
 	title		:	String!
-,	message		:	String! = nil
-,	config		:	( UITextField! -> () )! = nil
+, _	message		:	String! = nil
+, _	config		:	( UITextField! -> () )! = nil
 ,	ok			:	( UITextField! -> () )
 ) {
 	let wAC = UIAlertController(
@@ -169,8 +169,8 @@ BlockAlert(
 		,	message			:	message
 		,	preferredStyle	:	.Alert
 		)
-	,	animated:true
-	,	completion:nil
+	,	animated	:	true
+	,	completion	:	nil
 	)
 }
 
@@ -179,7 +179,6 @@ Alert(
   _	title		:	String! = nil
 , _	message		:	String! = nil
 , _ handler		:	() -> () = {}
-, _ completion	:	() -> () = {}
 ) {
 	let wAC = UIAlertController(
 		title			:	title
@@ -189,8 +188,8 @@ Alert(
 	wAC.addAction( UIAlertAction( title: "OK", style: .Cancel, handler: { p in handler() } ) )
 	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
 		wAC
-	,	animated:true
-	,	completion:completion
+	,	animated	:	true
+	,	completion	:	nil
 	)
 }
 
@@ -205,10 +204,32 @@ ErrorAlert( p: NSError ) {
 	wAC.addAction( UIAlertAction( title: "OK", style: .Cancel, handler: nil ) )
 	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
 		wAC
-	,	animated:true
-	,	completion:nil
+	,	animated	:	true
+	,	completion	:	nil
 	)
 }
+
+func
+Confirmation(
+  _	title		:	String! = nil
+, _	message		:	String! = nil
+, _ handler		:	() -> () = {}
+) {
+	let wAC = UIAlertController(
+		title			:	title
+	,	message			:	message
+	,	preferredStyle	:	.Alert
+	)
+	wAC.addAction( UIAlertAction( title: "OK", style: .Default, handler: { p in handler() } ) )
+	wAC.addAction( UIAlertAction( title: "Cancel", style: .Cancel, handler: nil ) )
+	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
+		wAC
+	,	animated	:	true
+	,	completion	:	nil
+	)
+}
+
+
 
 class
 V: UIView {

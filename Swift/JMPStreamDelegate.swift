@@ -1,7 +1,7 @@
 import Foundation
 
 enum
-TLSMode: Int {	//	If nit, it's automatic
+TLSMode: Int {	//	If nil, it's automatic
 	case No						= 0
 	case ValidateCertificate	= 1
 	case BypassValidation		= 2
