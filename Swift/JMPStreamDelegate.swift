@@ -9,7 +9,7 @@ TLSMode: Int {
 class
 JMPStreamDelegate: NSObject, NSStreamDelegate {
 
-	let	queue			:	NSMutableData = NSMutableData()
+	let	buffer			:	NSMutableData = NSMutableData()
 
 	var	inputStream		:	NSInputStream
 	var	outputStream	:	NSOutputStream
@@ -132,16 +132,16 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 
 	private	func
 	_Write() {
-		if queue.length != 0 {
-			let	wLength = outputStream.write( UnsafePointer<UInt8>( queue.bytes ), maxLength:queue.length )
-			if wLength > 0 { queue.replaceBytesInRange( NSMakeRange( 0, wLength ), withBytes:nil, length:0 ) }
+		if buffer.length != 0 {
+			let	wLength = outputStream.write( UnsafePointer<UInt8>( buffer.bytes ), maxLength:buffer.length )
+			if wLength > 0 { buffer.replaceBytesInRange( NSMakeRange( 0, wLength ), withBytes:nil, length:0 ) }
 			//	If wLength is less than zero, do nothing. The error will be reported to stream:handleEvent:
 		}
 	}
 
 	func
 	Write( p: NSData ) {
-		queue.appendData( p )
+		buffer.appendData( p )
 		if outputStream.hasSpaceAvailable { _Write() }
 	}
 
