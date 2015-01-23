@@ -38,22 +38,11 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 			,	kCFStreamSocketSecurityLevelNegotiatedSSL
 			,	kCFStreamPropertySocketSecurityLevel
 			)
-			switch wTLSMode {
-			case .ValidateCertificate:
-				CFWriteStreamSetProperty(
-					outputStream
-				,	kCFStreamPropertySSLSettings
-				,	[ kCFStreamSSLValidatesCertificateChain as String: true ]
-				)
-			case .BypassValidation:
-				CFWriteStreamSetProperty(
-					outputStream
-				,	kCFStreamPropertySSLSettings
-				,	[ kCFStreamSSLValidatesCertificateChain as String: false ]
-				)
-			default:
-				assert( false )
-			}
+			CFWriteStreamSetProperty(
+				outputStream
+			,	kCFStreamPropertySSLSettings
+			,	[ kCFStreamSSLValidatesCertificateChain as String: wTLSMode == .ValidateCertificate ]
+			)
 		}
 
 		inputStream.delegate = self
@@ -64,7 +53,6 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 
 		inputStream.open()
 		outputStream.open()
-
 	}
 
 	init(
