@@ -89,6 +89,7 @@ func
 Main( p: () -> () ) {
 	dispatch_async( dispatch_get_main_queue(), p )
 }
+
 /*
 class
 JMPSAddressBook : NSObject {
