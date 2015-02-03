@@ -141,6 +141,12 @@ Confirmation(
 	)
 }
 
+func
+Image( path: String ) -> UIImage! {
+	let w = NSData( contentsOfFile: path )
+	return w != nil ? UIImage( data: w! ) : nil
+}
+
 
 
 class
