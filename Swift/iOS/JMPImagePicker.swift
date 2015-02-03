@@ -181,7 +181,7 @@ JMPImagePicker: UIImagePickerController, UIImagePickerControllerDelegate, UINavi
 	@IBAction func
 	DoPreview( p: AnyObject ) {
 		self.navigationBarHidden = false
-		let w = ImagePreviewVC( nibName:"ImagePreviewVC", bundle:nil )
+		let w = JMPImagePreviewVC( nibName:"JMPImagePreviewVC", bundle:nil )
 		w.toBack = { p in
 			self.popViewControllerAnimated( true )
 			return
