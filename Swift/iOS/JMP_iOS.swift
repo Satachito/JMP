@@ -35,30 +35,19 @@ InputBox(
 }
 	
 func
-Animation(
-	animations	:	() -> ()
-,	duration	:	NSTimeInterval			= 0.25
-,	completion	:	( Bool -> () )!			= nil
-,	delay		:	NSTimeInterval			= 0
-,	options		:	UIViewAnimationOptions	= .CurveEaseInOut
-) {
-	UIView.animateWithDuration	(	duration
-	,	delay					:	delay
-	,	options					:	options
-	,	animations				:	animations
-	,	completion				:	completion
-	)
+Animate( p: () -> () ) {
+	UIView.animateWithDuration( 0.3, animations: p )
 }
 
 func
-SpringAnimation(
-	animations	:	() -> ()
-,	duration	:	NSTimeInterval			= 0.25
-,	completion	:	( Bool -> () )!			= nil
+SpringAnimate(
+	duration	:	NSTimeInterval			= 0.25
 ,	delay		:	NSTimeInterval			= 0
-,	options		:	UIViewAnimationOptions	= .CurveEaseInOut
 ,	damping		:	CGFloat					= 0.5
 ,	velocity	:	CGFloat					= 0.1
+,	options		:	UIViewAnimationOptions	= .CurveEaseInOut
+,	completion	:	( Bool -> () )!			= nil
+,	animations	:	() -> ()
 ) {
 	UIView.animateWithDuration	(	duration
 	,	delay					:	delay
@@ -90,21 +79,20 @@ func
 Alert(
   _	title		:	String! = nil
 , _	message		:	String! = nil
-, _ handler		:	() -> () = {}
+, _ handler		:	( UIAlertAction! -> () )! = nil
 ) {
 	let wAC = UIAlertController(
 		title			:	title
 	,	message			:	message
 	,	preferredStyle	:	.Alert
 	)
-	wAC.addAction( UIAlertAction( title: "OK", style: .Cancel, handler: { p in handler() } ) )
+	wAC.addAction( UIAlertAction( title: "OK", style: .Cancel, handler: handler ) )
 	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
 		wAC
 	,	animated	:	true
 	,	completion	:	nil
 	)
 }
-
 
 func
 ErrorAlert( p: NSError ) {
@@ -125,14 +113,14 @@ func
 Confirmation(
   _	title		:	String! = nil
 , _	message		:	String! = nil
-, _ handler		:	() -> () = {}
+, _ handler		:	( UIAlertAction! -> () )! = nil
 ) {
 	let wAC = UIAlertController(
 		title			:	title
 	,	message			:	message
 	,	preferredStyle	:	.Alert
 	)
-	wAC.addAction( UIAlertAction( title: "OK", style: .Default, handler: { p in handler() } ) )
+	wAC.addAction( UIAlertAction( title: "OK", style: .Default, handler: handler ) )
 	wAC.addAction( UIAlertAction( title: "Cancel", style: .Cancel, handler: nil ) )
 	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
 		wAC
@@ -146,8 +134,6 @@ Image( path: String ) -> UIImage! {
 	let w = NSData( contentsOfFile: path )
 	return w != nil ? UIImage( data: w! ) : nil
 }
-
-
 
 class
 V: UIView {

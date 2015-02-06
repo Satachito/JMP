@@ -150,7 +150,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 			var	wTargetIndex = FindSlot( p )
 			if wTargetIndex > 0 {
 				var	wSourceIndex = p.view!.tag
-				Animation() {
+				Animate() {
 					for i in 0 ..< self.targetViews.count {
 						if i != wSourceIndex {
 							var w = i;
@@ -179,13 +179,13 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 
 	func
 	AnimateToProperPosition() {
-		Animation() {
+		Animate() {
 			for i in 0 ..< self.targetViews.count {
 				self.targetViews[ i ].superview!.center = self.SlotCenter( i )
 			}
 		}
 	}
-	
+
 	func
 	Delete( p: UITapGestureRecognizer ) {
 		sendSubviewToBack( p.view!.superview! )

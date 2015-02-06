@@ -216,18 +216,17 @@ println( self.viewControllers )
 				let	wAT = CGAffineTransformMakeRotation( CGFloat( w ) )
 				dispatch_async(
 					dispatch_get_main_queue()
-				,	{	Animation(
-							{	self.oFlipB.transform = wAT
-								self.oFlashOnB.transform = wAT
-								self.oFlashOffB.transform = wAT
-								self.oFlashAutoB.transform = wAT
-								self.oCameraB.transform = wAT
-								self.oBackB.transform = wAT
-								self.oAdvanceB.transform = wAT
-								self.oThumbnailIV.transform = wAT
-								self.oBadgeL.transform = wAT
-							}
-						)
+				,	{	Animate() {
+							self.oFlipB.transform = wAT
+							self.oFlashOnB.transform = wAT
+							self.oFlashOffB.transform = wAT
+							self.oFlashAutoB.transform = wAT
+							self.oCameraB.transform = wAT
+							self.oBackB.transform = wAT
+							self.oAdvanceB.transform = wAT
+							self.oThumbnailIV.transform = wAT
+							self.oBadgeL.transform = wAT
+						}
 					}
 				)
 			}
