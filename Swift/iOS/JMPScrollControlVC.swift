@@ -39,7 +39,7 @@ JMPScrollControlVC: UIViewController {
 
 	func
 	ScrollView() -> UIScrollView {
-		return oContainerV.subviews[ 0 ] as UIScrollView
+		return ( oContainerV.subviews[ 0 ] as? UIScrollView )!
 	}
 
 //	#pragma	mark	----------------------------------------------------------------	Utilities
@@ -73,7 +73,7 @@ JMPScrollControlVC: UIViewController {
 
 	func
 	AdjustWithKB( p: NSNotification ) {
-		var	wRect = ( ( p.userInfo as [ NSString: AnyObject ] )[ UIKeyboardFrameEndUserInfoKey ] as NSValue! ).CGRectValue()
+		var	wRect = ( ( p.userInfo as? [ NSString: AnyObject ] )![ UIKeyboardFrameEndUserInfoKey ] as? NSValue! )!.CGRectValue()
 		if !CGRectIsNull( wRect ) {
 			wRect = self.view.convertRect( wRect, fromView: self.view.window )	//	KeyboardRect
 
@@ -96,11 +96,11 @@ JMPScrollControlVC: UIViewController {
 
 	func
 	AdjustWithKBSynchedToKB( p: NSNotification ) {	//	Used only in case of iOS 7
-		UIView.animateWithDuration	(	( ( p.userInfo as [ NSString: AnyObject ] )[ UIKeyboardAnimationDurationUserInfoKey ] as NSNumber ).doubleValue
+		UIView.animateWithDuration	(	( ( p.userInfo as? [ NSString: AnyObject ] )![ UIKeyboardAnimationDurationUserInfoKey ] as? NSNumber )!.doubleValue
 		,	delay					:	0
 		,	options					:	UIViewAnimationOptions(
 				UInt(
-					( ( p.userInfo as [ NSString: AnyObject ] )[ UIKeyboardAnimationCurveUserInfoKey ] as NSNumber ).unsignedIntValue << 16
+					( ( p.userInfo as? [ NSString: AnyObject ] )![ UIKeyboardAnimationCurveUserInfoKey ] as? NSNumber )!.unsignedIntValue << 16
 				)
 			)
 		,	animations				:	{}
@@ -142,7 +142,7 @@ JMPScrollControlVC: UIViewController {
 	,	change: NSDictionary!
 	,	context: UnsafePointer<Void>!
 	) {
-		if ( ofObject! as UIView ) == oInputV.inputAccessoryView!.superview { AdjustWithAccessoryV() }
+		if ofObject as? UIView == oInputV.inputAccessoryView!.superview { AdjustWithAccessoryV() }
 	}
 
 	override	func

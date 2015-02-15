@@ -75,7 +75,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 	SyncEditMode() {
 		if editMode {
 			for wV in targetViews {
-				( wV.superview!.subviews[ 1 ] as UIView ).hidden = false
+				( wV.superview!.subviews[ 1 ] as? UIView )!.hidden = false
 			
 				let wBA = CABasicAnimation( keyPath:"transform.rotation" )
 				wBA.duration = 0.1
@@ -91,7 +91,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 			}
 		} else {
 			for wV in targetViews {
-				( wV.superview!.subviews[ 1 ] as UIView ).hidden = true
+				( wV.superview!.subviews[ 1 ] as? UIView )!.hidden = true
 				wV.superview!.layer.removeAllAnimations()
 			}
 		}
