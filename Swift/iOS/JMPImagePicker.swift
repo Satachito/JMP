@@ -80,7 +80,7 @@ JMPImagePicker: UIImagePickerController, UIImagePickerControllerDelegate, UINavi
 	}
 
 	func
-	setCameraDevice( p: UIImagePickerControllerCameraDevice ) {
+	CameraDevice( p: UIImagePickerControllerCameraDevice ) {
 		super.cameraDevice = p
 		let w = !UIImagePickerController.isFlashAvailableForCameraDevice( p )
 		oFlashOnB.hidden = w
@@ -89,7 +89,7 @@ JMPImagePicker: UIImagePickerController, UIImagePickerControllerDelegate, UINavi
 	}
 
 	func
-	setCameraFlashMode( p: UIImagePickerControllerCameraFlashMode ) {
+	CameraFlashMode( p: UIImagePickerControllerCameraFlashMode ) {
 		super.cameraFlashMode = p
 		oFlashOnB.hidden = true
 		oFlashOffB.hidden = true
@@ -156,15 +156,15 @@ JMPImagePicker: UIImagePickerController, UIImagePickerControllerDelegate, UINavi
 	
 	@IBAction func
 	DoFlip( p: AnyObject ) {
-		self.cameraDevice = self.cameraDevice == .Rear ? .Front : .Rear
+		CameraDevice( self.cameraDevice == .Rear ? .Front : .Rear )
 	}
 	
 	@IBAction func
 	DoFlash( p: AnyObject ) {
 		switch self.cameraFlashMode {
-		case .Off:	self.cameraFlashMode = .On
-		case .On:	self.cameraFlashMode = .Auto
-		case .Auto:	self.cameraFlashMode = .Off
+		case .Off:	CameraFlashMode( .On )
+		case .On:	CameraFlashMode( .Auto )
+		case .Auto:	CameraFlashMode( .Off )
 		}
 	}
 	
@@ -194,7 +194,7 @@ JMPImagePicker: UIImagePickerController, UIImagePickerControllerDelegate, UINavi
 println( viewController )
 println( self.viewControllers )
 
-		self.cameraOverlayView!.hidden = !( viewController == self.viewControllers[ 0 ] as NSObject )
+		self.cameraOverlayView!.hidden = !( viewController == self.viewControllers[ 0 ] as? NSObject )
 	}
 
 	func

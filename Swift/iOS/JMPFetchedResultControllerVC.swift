@@ -53,7 +53,7 @@ JMPFetchedResultControllerVC: UITableViewController, NSFetchedResultsControllerD
 	tableView( UITableView, commitEditingStyle: UITableViewCellEditingStyle, forRowAtIndexPath:NSIndexPath ) {
 		switch commitEditingStyle {
 		case .Delete:
-			frc.managedObjectContext.deleteObject( frc.objectAtIndexPath( forRowAtIndexPath ) as NSManagedObject )
+			frc.managedObjectContext.deleteObject( ( frc.objectAtIndexPath( forRowAtIndexPath ) as? NSManagedObject )! )
 			Update()
 		default:
 			break
@@ -66,44 +66,44 @@ JMPFetchedResultControllerVC: UITableViewController, NSFetchedResultsControllerD
 	}
 
 	func
-	controllerWillChangeContent( NSFetchedResultsController! ) {
+	controllerWillChangeContent( NSFetchedResultsController ) {
 		self.tableView.beginUpdates()
 	}
 
-	func
-	controller( NSFetchedResultsController
-	,	didChangeSection	:	AnyObject!
-	,	atIndex				:	Int
-	,	forChangeType		:	NSFetchedResultsChangeType
+    func
+	controller(				controller	: NSFetchedResultsController
+	,	didChangeSection	sectionInfo	: NSFetchedResultsSectionInfo
+	,	atIndex				sectionIndex: Int
+	,	forChangeType		type		: NSFetchedResultsChangeType
 	) {
-		switch ( forChangeType ) {
+		switch ( type ) {
 		case .Insert:
-			self.tableView.insertSections( NSIndexSet( index:atIndex ), withRowAnimation:.Fade )
+			self.tableView.insertSections( NSIndexSet( index:sectionIndex ), withRowAnimation:.Fade )
 		case .Delete:
-			self.tableView.deleteSections( NSIndexSet( index:atIndex ), withRowAnimation:.Fade )
+			self.tableView.deleteSections( NSIndexSet( index:sectionIndex ), withRowAnimation:.Fade )
 		default:
 			break;
 		}
 	}
 
 	func
-	controller			(	 NSFetchedResultsController
-	,	didChangeObject	:	AnyObject!
-	,	atIndexPath		:	NSIndexPath
-	,	forChangeType	:	NSFetchedResultsChangeType
-	,	newIndexPath	:	NSIndexPath
+	controller(				controller	: NSFetchedResultsController
+	,	didChangeObject		anObject	: AnyObject
+	,	atIndexPath			indexPath	: NSIndexPath?
+	,	forChangeType		type		: NSFetchedResultsChangeType
+	,						newIndexPath: NSIndexPath?
 	) {
-		switch forChangeType {
+ 		switch type {
 		case .Insert:
-			self.tableView.insertRowsAtIndexPaths( [ newIndexPath ], withRowAnimation:.Fade )
+			self.tableView.insertRowsAtIndexPaths( [ newIndexPath! ], withRowAnimation:.Fade )
 		case .Delete:
-			self.tableView.deleteRowsAtIndexPaths( [  atIndexPath ], withRowAnimation:.Fade )
+			self.tableView.deleteRowsAtIndexPaths( [    indexPath! ], withRowAnimation:.Fade )
 		case .Update:
-			self.tableView.deleteRowsAtIndexPaths( [  atIndexPath ], withRowAnimation:.Fade )
-			self.tableView.insertRowsAtIndexPaths( [  atIndexPath ], withRowAnimation:.Fade )
+			self.tableView.deleteRowsAtIndexPaths( [    indexPath! ], withRowAnimation:.Fade )
+			self.tableView.insertRowsAtIndexPaths( [    indexPath! ], withRowAnimation:.Fade )
 		case .Move:
-			self.tableView.deleteRowsAtIndexPaths( [  atIndexPath ], withRowAnimation:.Fade )
-			self.tableView.insertRowsAtIndexPaths( [ newIndexPath ], withRowAnimation:.Fade )
+			self.tableView.deleteRowsAtIndexPaths( [    indexPath! ], withRowAnimation:.Fade )
+			self.tableView.insertRowsAtIndexPaths( [ newIndexPath! ], withRowAnimation:.Fade )
 		default:
 			break;
 		}

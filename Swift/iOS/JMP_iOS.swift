@@ -113,7 +113,7 @@ func
 Confirmation(
   _	title		:	String! = nil
 , _	message		:	String! = nil
-, _ handler		:	( UIAlertAction! -> () )! = nil
+,	handler		:	UIAlertAction! -> ()
 ) {
 	let wAC = UIAlertController(
 		title			:	title
