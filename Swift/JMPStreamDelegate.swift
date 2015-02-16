@@ -38,11 +38,11 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 			,	kCFStreamSocketSecurityLevelNegotiatedSSL
 			,	kCFStreamPropertySocketSecurityLevel
 			)
-			let	wString = ( kCFStreamSSLValidatesCertificateChain as NSString? )! as String
+			let wS: NSString = kCFStreamSSLValidatesCertificateChain	//	Sit outside the function below for XCode6.3Beta1
 			CFWriteStreamSetProperty(
 				outputStream
 			,	kCFStreamPropertySSLSettings
-			,	[ wString: wTLSMode == .ValidateCertificate ]
+			,	[ wS: wTLSMode == .ValidateCertificate ]
 			)
 		}
 

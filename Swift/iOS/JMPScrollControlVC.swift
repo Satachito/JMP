@@ -142,7 +142,7 @@ JMPScrollControlVC: UIViewController {
 	,	change: NSDictionary!
 	,	context: UnsafePointer<Void>!
 	) {
-		if ( ofObject as? UIView )! == oInputV.inputAccessoryView!.superview { AdjustWithAccessoryV() }
+		if ofObject as? UIView == oInputV.inputAccessoryView!.superview { AdjustWithAccessoryV() }
 	}
 
 	override	func
