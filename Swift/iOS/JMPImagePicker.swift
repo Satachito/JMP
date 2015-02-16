@@ -12,7 +12,7 @@ func
 TempFiles() -> [ String ] {
 	var	v = [ String ]()
 	for w in NSFileManager.defaultManager().contentsOfDirectoryAtPath( NSTemporaryDirectory(), error: nil )! {
-		v.append( NSTemporaryDirectory().stringByAppendingPathComponent( w as String ) )
+		v.append( NSTemporaryDirectory().stringByAppendingPathComponent( ( w as? String )! ) )
 	}
 	return v
 }

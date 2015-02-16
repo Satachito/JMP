@@ -34,12 +34,12 @@ UTF8Data( p: String ) -> NSData? {
 
 func
 UTF8String( p: NSData ) -> String? {
-	return NSString( data:p, encoding: NSUTF8StringEncoding )
+	return NSString( data:p, encoding: NSUTF8StringEncoding ) as? String
 }
 
 func
 UTF8String( p: UnsafePointer<UInt8>, length: Int ) -> String? {
-	return NSString( bytes: p, length: length, encoding: NSUTF8StringEncoding )
+	return NSString( bytes: p, length: length, encoding: NSUTF8StringEncoding ) as? String
 }
 
 func
@@ -70,17 +70,17 @@ IsNull( p: AnyObject? ) -> Bool {
 
 func
 AsInt( p: AnyObject? ) -> Int? {
-	if p is NSNumber { return ( p as NSNumber ).integerValue }
-	if p is String { return ( p as NSString ).integerValue }
+	if p is NSNumber { return ( p as? NSNumber )!.integerValue }
+	if p is String { return ( p as? NSString )!.integerValue }
 	return nil;
 }
 
 func
-Notification( name: String, p: ( NSNotification! -> () )!, queue: NSOperationQueue! = nil ) -> NSObjectProtocol! {
+Notification( name: String, p: NSNotification! -> () ) -> NSObjectProtocol {
 	return NSNotificationCenter.defaultCenter().addObserverForName(
 		name
 	,	object				:	nil
-	,	queue				:	queue
+	,	queue				:	nil
 	,	usingBlock			:	p
 	)
 }
@@ -90,6 +90,14 @@ Main( p: () -> () ) {
 	dispatch_async( dispatch_get_main_queue(), p )
 }
 
+func
+DocumentDirectoryURL() -> NSURL {
+	let v = NSFileManager.defaultManager().URLsForDirectory(
+		.DocumentDirectory
+	,	inDomains:.UserDomainMask
+	)[ 0 ] as? NSURL
+	return v!
+}
 /*
 class
 JMPSAddressBook : NSObject {

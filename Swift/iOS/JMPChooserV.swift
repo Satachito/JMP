@@ -67,24 +67,24 @@ JMPChooserV : UIScrollView, UIScrollViewDelegate
 	}
 
 	func
-	scrollViewDidEndDecelerating( UIScrollView! ) {
+	scrollViewDidEndDecelerating( UIScrollView ) {
 		if choosen != nil { choosen( choice ) }
 	}
 
 	func
-	scrollViewDidEndDragging( scrollView: UIScrollView!, willDecelerate: Bool ) {
+	scrollViewDidEndDragging( scrollView: UIScrollView, willDecelerate: Bool ) {
 		if willDecelerate { return }
 		if choosen != nil { choosen( choice ) }
 	}
 
 	func
-	scrollViewDidEndScrollingAnimation( UIScrollView! ) {
+	scrollViewDidEndScrollingAnimation( UIScrollView ) {
 		if choosen != nil { choosen( choice ) }
 	}
 
 	func
 	scrollViewWillEndDragging(
-		UIScrollView!
+		UIScrollView
 	,	withVelocity		:	CGPoint
 	,	targetContentOffset	:	UnsafeMutablePointer<CGPoint>
 	) {
