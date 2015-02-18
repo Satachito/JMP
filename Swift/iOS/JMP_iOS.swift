@@ -21,7 +21,7 @@ InputBox(
 	,	preferredStyle	:	.Alert
 	)
 	var wTF : UITextField!
-	wAC.addTextFieldWithConfigurationHandler() { p in
+	wAC.addTextFieldWithConfigurationHandler { p in
 		if config != nil { config( p ) }
 		wTF = p
 	}
