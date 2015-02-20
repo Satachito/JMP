@@ -9,15 +9,15 @@ TLSMode: Int {
 class
 JMPStreamDelegate: NSObject, NSStreamDelegate {
 
-	let	buffer			:	NSMutableData = NSMutableData()
+	let	buffer			: NSMutableData = NSMutableData()
 
-	var	inputStream		:	NSInputStream
-	var	outputStream	:	NSOutputStream
+	var	inputStream		: NSInputStream
+	var	outputStream	: NSOutputStream
 
-	var	openHandler		:	NSStream	-> ()
-	var	dataHandler		:	NSData		-> ()
-	var	errorHandler	:	NSStream	-> ()
-	var	endHandler		:	NSStream	-> ()
+	var	openHandler		: NSStream		-> ()
+	var	inputHandler	: NSInputStream	-> ()
+	var	errorHandler	: NSStream		-> ()
+	var	endHandler		: NSInputStream	-> ()
 
 	deinit {
 		inputStream.close()
@@ -60,13 +60,13 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 		host			: String
 	,	port			: Int
 	,	tlsMode			: TLSMode?
-	,	openHandler		: NSStream	-> ()
-	,	dataHandler		: NSData	-> ()
-	,	errorHandler	: NSStream	-> ()
-	,	endHandler		: NSStream	-> ()
+	,	openHandler		: NSStream		-> ()
+	,	inputHandler	: NSInputStream	-> ()
+	,	errorHandler	: NSStream		-> ()
+	,	endHandler		: NSInputStream	-> ()
 	) {
 		self.openHandler	= openHandler
-		self.dataHandler	= dataHandler
+		self.inputHandler	= inputHandler
 		self.errorHandler	= errorHandler
 		self.endHandler		= endHandler
 
@@ -91,13 +91,13 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 	init(
 		socket			: CFSocketNativeHandle
 	,	tlsMode			: TLSMode?
-	,	openHandler		: NSStream	-> ()
-	,	dataHandler		: NSData	-> ()
-	,	errorHandler	: NSStream	-> ()
-	,	endHandler		: NSStream	-> ()
+	,	openHandler		: NSStream		-> ()
+	,	inputHandler	: NSInputStream	-> ()
+	,	errorHandler	: NSStream		-> ()
+	,	endHandler		: NSInputStream	-> ()
 	) {
 		self.openHandler	= openHandler
-		self.dataHandler	= dataHandler
+		self.inputHandler	= inputHandler
 		self.errorHandler	= errorHandler
 		self.endHandler		= endHandler
 
@@ -141,9 +141,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 	) {
 		switch handleEvent {
 		case NSStreamEvent.HasBytesAvailable:
-			let	wData = NSMutableData( length: 4096 )!
-			wData.length = inputStream.read( UnsafeMutablePointer<UInt8>( wData.mutableBytes ), maxLength:wData.length )
-			dataHandler( wData )
+			inputHandler( inputStream )
 		case NSStreamEvent.OpenCompleted:
 			openHandler( theStream )
 		case NSStreamEvent.HasSpaceAvailable:
@@ -151,7 +149,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 		case NSStreamEvent.ErrorOccurred:
 			errorHandler( theStream )
 		case NSStreamEvent.EndEncountered:
-			endHandler( theStream )
+			endHandler( inputStream )
 		case NSStreamEvent.None:
 			break
 		default:
@@ -159,9 +157,4 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 		}
 	}
 }
-
-//			var	wBuffer = UnsafeMutablePointer<UInt8>( [ Int8 ]( count: 4096, repeatedValue: 0 ) )
-//			var	wLength = 4096
-//			let x = inputStream.getBuffer( &wBuffer, length: &wLength )
-//			dataHandler( NSData( bytes:wBuffer, length:wLength ) )
 

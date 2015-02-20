@@ -36,7 +36,7 @@ InputBox(
 	
 func
 Animate( p: () -> () ) {
-	UIView.animateWithDuration( 0.3, animations: p )
+	UIView.animateWithDuration( 0.25, animations: p )
 }
 
 func
