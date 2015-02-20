@@ -98,6 +98,13 @@ DocumentDirectoryURL() -> NSURL {
 	)[ 0 ] as? NSURL
 	return v!
 }
+
+func
+Center( p: CGRect ) -> CGPoint {
+	return CGPointMake( CGRectGetMidX( p ), CGRectGetMidY( p ) )
+}
+	
+
 /*
 class
 JMPSAddressBook : NSObject {

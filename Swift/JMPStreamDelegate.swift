@@ -141,6 +141,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 	) {
 		switch handleEvent {
 		case NSStreamEvent.HasBytesAvailable:
+			assert( theStream == inputStream )
 			inputHandler( inputStream )
 		case NSStreamEvent.OpenCompleted:
 			openHandler( theStream )
@@ -149,6 +150,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 		case NSStreamEvent.ErrorOccurred:
 			errorHandler( theStream )
 		case NSStreamEvent.EndEncountered:
+			assert( theStream == inputStream )
 			endHandler( inputStream )
 		case NSStreamEvent.None:
 			break
