@@ -76,7 +76,7 @@ AsInt( p: AnyObject? ) -> Int? {
 }
 
 func
-Notification( name: String, p: NSNotification! -> () ) -> NSObjectProtocol! {
+Notification( name: String, p: NSNotification! -> () ) -> NSObjectProtocol {
 	return NSNotificationCenter.defaultCenter().addObserverForName(
 		name
 	,	object				:	nil
@@ -92,12 +92,11 @@ Main( p: () -> () ) {
 
 func
 DocumentDirectoryURL() -> NSURL {
-	return (
-		NSFileManager.defaultManager().URLsForDirectory(
-			.DocumentDirectory
-		,	inDomains:.UserDomainMask
-		)[ 0 ] as? NSURL
-	)!
+	let v = NSFileManager.defaultManager().URLsForDirectory(
+		.DocumentDirectory
+	,	inDomains:.UserDomainMask
+	)[ 0 ] as? NSURL
+	return v!
 }
 /*
 class

@@ -73,7 +73,7 @@ JMPScrollControlVC: UIViewController {
 
 	func
 	AdjustWithKB( p: NSNotification ) {
-		var	wRect = ( ( p.userInfo as? [ NSString: AnyObject ] )![ UIKeyboardFrameEndUserInfoKey ] as? NSValue! )!.CGRectValue()
+		var	wRect = ( ( p.userInfo as? [ NSString: AnyObject ] )![ UIKeyboardFrameEndUserInfoKey ] as? NSValue )!.CGRectValue()
 		if !CGRectIsNull( wRect ) {
 			wRect = self.view.convertRect( wRect, fromView: self.view.window )	//	KeyboardRect
 
