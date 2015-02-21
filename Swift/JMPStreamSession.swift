@@ -7,24 +7,54 @@ TLSMode: Int {
 }
 
 class
-JMPStreamDelegate: NSObject, NSStreamDelegate {
+JMPStreamSession: NSObject, NSStreamDelegate {
 
 	let	buffer			: NSMutableData = NSMutableData()
 
 	var	inputStream		: NSInputStream
 	var	outputStream	: NSOutputStream
 
-	var	openHandler		: NSStream		-> ()
-	var	inputHandler	: NSInputStream	-> ()
-	var	errorHandler	: NSStream		-> ()
-	var	endHandler		: NSInputStream	-> ()
+	var	openHandler		: NSStream			-> ()
+	var	inputHandler	: NSInputStream		-> ()
+	var	errorHandler	: NSStream			-> ()
+	var	endHandler		: JMPStreamSession	-> ()
 
-	deinit {
+	private func
+	_Write() -> Int {
+		var	v = 0
+		if buffer.length > 0 {
+			v = outputStream.write( UnsafePointer<UInt8>( buffer.bytes ), maxLength:buffer.length )
+			if v > 0 {
+				buffer.replaceBytesInRange( NSMakeRange( 0, v ), withBytes:nil, length:0 )
+			}
+		}
+		return v
+	}
+
+	func
+	Write( p: NSData ) {
+		buffer.appendData( p )
+		if outputStream.hasSpaceAvailable { _Write() }
+	}
+
+	var	uClosed = false
+	func
+	Close() {
 		inputStream.close()
+		while buffer.length > 0 {
+			if _Write() < 0 { break }
+		}
 		outputStream.close()
+//println( "Closed" )
 
 		inputStream.delegate = nil
 		outputStream.delegate = nil
+
+		uClosed = true
+	}
+	deinit {
+//println( "deinit" )
+		if !uClosed { Close() }
 	}
 
 	func
@@ -52,6 +82,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 		inputStream.scheduleInRunLoop( NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode )
 		outputStream.scheduleInRunLoop( NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode )
 
+//println( "Opening" )
 		inputStream.open()
 		outputStream.open()
 	}
@@ -60,10 +91,10 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 		host			: String
 	,	port			: Int
 	,	tlsMode			: TLSMode?
-	,	openHandler		: NSStream		-> ()
-	,	inputHandler	: NSInputStream	-> ()
-	,	errorHandler	: NSStream		-> ()
-	,	endHandler		: NSInputStream	-> ()
+	,	openHandler		: NSStream			-> ()
+	,	inputHandler	: NSInputStream		-> ()
+	,	errorHandler	: NSStream			-> ()
+	,	endHandler		: JMPStreamSession	-> ()
 	) {
 		self.openHandler	= openHandler
 		self.inputHandler	= inputHandler
@@ -91,18 +122,18 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 	init(
 		socket			: CFSocketNativeHandle
 	,	tlsMode			: TLSMode?
-	,	openHandler		: NSStream		-> ()
-	,	inputHandler	: NSInputStream	-> ()
-	,	errorHandler	: NSStream		-> ()
-	,	endHandler		: NSInputStream	-> ()
+	,	openHandler		: NSStream			-> ()
+	,	inputHandler	: NSInputStream		-> ()
+	,	errorHandler	: NSStream			-> ()
+	,	endHandler		: JMPStreamSession	-> ()
 	) {
 		self.openHandler	= openHandler
 		self.inputHandler	= inputHandler
 		self.errorHandler	= errorHandler
 		self.endHandler		= endHandler
 
-		var	readStream:		Unmanaged<CFReadStream>?
-		var	writeStream:	Unmanaged<CFWriteStream>?
+		var	readStream	: Unmanaged<CFReadStream>?
+		var	writeStream	: Unmanaged<CFWriteStream>?
 
 		CFStreamCreatePairWithSocket(
 			nil
@@ -117,21 +148,6 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 		super.init()
 
 		Setup( tlsMode )
-	}
-
-	private	func
-	_Write() {
-		if buffer.length != 0 {
-			let	wLength = outputStream.write( UnsafePointer<UInt8>( buffer.bytes ), maxLength:buffer.length )
-			if wLength > 0 { buffer.replaceBytesInRange( NSMakeRange( 0, wLength ), withBytes:nil, length:0 ) }
-			//	If wLength is less than zero, do nothing. The error will be reported to stream:handleEvent:
-		}
-	}
-
-	func
-	Write( p: NSData ) {
-		buffer.appendData( p )
-		if outputStream.hasSpaceAvailable { _Write() }
 	}
 
 	func
@@ -151,7 +167,7 @@ JMPStreamDelegate: NSObject, NSStreamDelegate {
 			errorHandler( theStream )
 		case NSStreamEvent.EndEncountered:
 			assert( theStream == inputStream )
-			endHandler( inputStream )
+			endHandler( self )
 		case NSStreamEvent.None:
 			break
 		default:

@@ -7,6 +7,10 @@ Dist2( left: CGPoint, right: CGPoint ) -> Double {
 	return w * w + h * h
 }
 
+func
+Center( p: CGRect ) -> CGPoint {
+	return CGPointMake( CGRectGetMidX( p ), CGRectGetMidY( p ) )
+}
 
 func
 InputBox(
