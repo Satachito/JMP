@@ -91,15 +91,25 @@ Main( p: () -> () ) {
 }
 
 func
-DocumentDirectoryURL() -> NSURL {
-	let v = NSFileManager.defaultManager().URLsForDirectory(
-		.DocumentDirectory
-	,	inDomains:.UserDomainMask
-	)[ 0 ] as? NSURL
-	return v!
+DocumentDirectoryURLs() -> [ NSURL ] {
+	return (
+		NSFileManager.defaultManager().URLsForDirectory(
+			.DocumentDirectory
+		,	inDomains:.UserDomainMask
+		) as? [ NSURL ]
+	)!
 }
-	
 
+func
+DocumentDirectoryPathes() -> [ String ] {
+	return (
+		NSSearchPathForDirectoriesInDomains(
+			.DocumentDirectory
+		,	.UserDomainMask
+		,	true
+		) as? [ String ]
+	)!
+}
 /*
 class
 JMPSAddressBook : NSObject {
