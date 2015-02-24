@@ -2,22 +2,22 @@ import Foundation
 
 enum
 TLSMode: Int {
-	case ValidateCertificate	= 1
-	case BypassValidation		= 2
+	case ValidateCertificate	=	1
+	case BypassValidation		=	2
 }
 
 class
 JMPStreamSession: NSObject, NSStreamDelegate {
 
-	let	buffer			: NSMutableData = NSMutableData()
+	let	buffer			:	NSMutableData = NSMutableData()
 
-	var	inputStream		: NSInputStream
-	var	outputStream	: NSOutputStream
+	var	inputStream		:	NSInputStream
+	var	outputStream	:	NSOutputStream
 
-	var	openHandler		: NSStream			-> ()
-	var	inputHandler	: NSInputStream		-> ()
-	var	errorHandler	: NSStream			-> ()
-	var	endHandler		: JMPStreamSession	-> ()
+	var	openHandler		:	NSStream			-> ()
+	var	inputHandler	:	NSInputStream		-> ()
+	var	errorHandler	:	NSStream			-> ()
+	var	endHandler		:	JMPStreamSession	-> ()
 
 	private func
 	_Write() -> Int {
@@ -88,21 +88,21 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 	}
 
 	init(
-		host			: String
-	,	port			: Int
-	,	tlsMode			: TLSMode?
-	,	openHandler		: NSStream			-> ()
-	,	inputHandler	: NSInputStream		-> ()
-	,	errorHandler	: NSStream			-> ()
-	,	endHandler		: JMPStreamSession	-> ()
+		host			:	String
+	,	port			:	Int
+	,	tlsMode			:	TLSMode?
+	,	openHandler		:	NSStream			-> ()
+	,	inputHandler	:	NSInputStream		-> ()
+	,	errorHandler	:	NSStream			-> ()
+	,	endHandler		:	JMPStreamSession	-> ()
 	) {
-		self.openHandler	= openHandler
-		self.inputHandler	= inputHandler
-		self.errorHandler	= errorHandler
-		self.endHandler		= endHandler
+		self.openHandler	=	openHandler
+		self.inputHandler	=	inputHandler
+		self.errorHandler	=	errorHandler
+		self.endHandler		=	endHandler
 
-		var inputStream		: NSInputStream?
-		var	outputStream	: NSOutputStream?
+		var inputStream		:	NSInputStream?
+		var	outputStream	:	NSOutputStream?
 
 		NSStream.getStreamsToHostWithName(
 								host
@@ -111,8 +111,8 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 		,	outputStream	:	&outputStream
 		)
 
-		self.inputStream	= inputStream!
-		self.outputStream	= outputStream!
+		self.inputStream	=	inputStream!
+		self.outputStream	=	outputStream!
 
 		super.init()
 
@@ -120,20 +120,20 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 	}
 
 	init(
-		socket			: CFSocketNativeHandle
-	,	tlsMode			: TLSMode?
-	,	openHandler		: NSStream			-> ()
-	,	inputHandler	: NSInputStream		-> ()
-	,	errorHandler	: NSStream			-> ()
-	,	endHandler		: JMPStreamSession	-> ()
+		socket			:	CFSocketNativeHandle
+	,	tlsMode			:	TLSMode?
+	,	openHandler		:	NSStream			-> ()
+	,	inputHandler	:	NSInputStream		-> ()
+	,	errorHandler	:	NSStream			-> ()
+	,	endHandler		:	JMPStreamSession	-> ()
 	) {
-		self.openHandler	= openHandler
-		self.inputHandler	= inputHandler
-		self.errorHandler	= errorHandler
-		self.endHandler		= endHandler
+		self.openHandler	=	openHandler
+		self.inputHandler	=	inputHandler
+		self.errorHandler	=	errorHandler
+		self.endHandler		=	endHandler
 
-		var	readStream	: Unmanaged<CFReadStream>?
-		var	writeStream	: Unmanaged<CFWriteStream>?
+		var	readStream	:	Unmanaged<CFReadStream>?
+		var	writeStream	:	Unmanaged<CFWriteStream>?
 
 		CFStreamCreatePairWithSocket(
 			nil
@@ -142,8 +142,8 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 		,	&writeStream
 		)
 
-		self.inputStream	= readStream!.takeRetainedValue()
-		self.outputStream	= writeStream!.takeRetainedValue()
+		self.inputStream	=	readStream!.takeRetainedValue()
+		self.outputStream	=	writeStream!.takeRetainedValue()
 
 		super.init()
 
