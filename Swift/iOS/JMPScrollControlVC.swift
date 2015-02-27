@@ -121,18 +121,15 @@ JMPScrollControlVC: UIViewController {
 	viewWillAppear( p: Bool ) {
 		super.viewWillAppear( p )
 
-		uDidChange = Notification(
-			"UIKeyboardCandidateCorrectionDidChangeNotification"
-		,	{ ( p: NSNotification! ) in if let wV = self.oInputV.inputAccessoryView!.superview { self.AdjustWithAccessoryV() } }
-		)
-		uWillShow = Notification(
-			UIKeyboardWillShowNotification
-		,	{ ( p: NSNotification! ) in self.AdjustWithKB( p ) }
-		)
-		uWillHide = Notification(
-			UIKeyboardWillHideNotification
-		,	{ ( p: NSNotification! ) in self.AdjustWithKB( p ) }
-		)
+		uDidChange = Notify( "UIKeyboardCandidateCorrectionDidChangeNotification" ) {
+			p in if let wV = self.oInputV.inputAccessoryView!.superview { self.AdjustWithAccessoryV() }
+		}
+		uWillShow = Notify( UIKeyboardWillShowNotification ) {
+			p in self.AdjustWithKB( p )
+		}
+		uWillHide = Notify( UIKeyboardWillHideNotification ) {
+			p in self.AdjustWithKB( p )
+		}
 	}
 
 	func
