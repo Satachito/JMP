@@ -76,18 +76,18 @@ AsInt( p: AnyObject? ) -> Int? {
 }
 
 func
-Notification( name: String, p: NSNotification! -> () ) -> NSObjectProtocol {
+Notify( name: String, ed: NSNotification! -> () ) -> NSObjectProtocol {
 	return NSNotificationCenter.defaultCenter().addObserverForName(
 		name
 	,	object				:	nil
 	,	queue				:	nil
-	,	usingBlock			:	p
+	,	usingBlock			:	ed
 	)
 }
 
 func
-Main( p: () -> () ) {
-	dispatch_async( dispatch_get_main_queue(), p )
+Main( ed: () -> () ) {
+	dispatch_async( dispatch_get_main_queue(), ed )
 }
 
 func
