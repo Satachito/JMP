@@ -67,16 +67,20 @@ func
 BlockAlert(
   _	title	:	String! = nil
 , _	message	:	String! = nil
-) {
+) -> UIAlertController {
+	let	v = UIAlertController(
+		title			:	title
+	,	message			:	message
+	,	preferredStyle	:	.Alert
+	)
+
 	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
-		UIAlertController(
-			title			:	title
-		,	message			:	message
-		,	preferredStyle	:	.Alert
-		)
+		v
 	,	animated	:	true
 	,	completion	:	nil
 	)
+
+	return v
 }
 
 func
