@@ -14,10 +14,10 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 	var	inputStream		:	NSInputStream
 	var	outputStream	:	NSOutputStream
 
-	var	openHandler		:	NSStream			-> ()
-	var	inputHandler	:	NSInputStream		-> ()
-	var	errorHandler	:	NSStream			-> ()
-	var	endHandler		:	JMPStreamSession	-> ()
+	var	openHandler		:	NSStream		-> ()
+	var	inputHandler	:	NSInputStream	-> ()
+	var	errorHandler	:	NSStream		-> ()
+	var	endHandler		:	NSStream		-> ()
 
 	private func
 	_Write() -> Int {
@@ -91,10 +91,10 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 		host			:	String
 	,	port			:	Int
 	,	tlsMode			:	TLSMode?
-	,	openHandler		:	NSStream			-> ()
-	,	inputHandler	:	NSInputStream		-> ()
-	,	errorHandler	:	NSStream			-> ()
-	,	endHandler		:	JMPStreamSession	-> ()
+	,	openHandler		:	NSStream		-> ()
+	,	inputHandler	:	NSInputStream	-> ()
+	,	errorHandler	:	NSStream		-> ()
+	,	endHandler		:	NSStream		-> ()
 	) {
 		self.openHandler	=	openHandler
 		self.inputHandler	=	inputHandler
@@ -122,10 +122,10 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 	init(
 		socket			:	CFSocketNativeHandle
 	,	tlsMode			:	TLSMode?
-	,	openHandler		:	NSStream			-> ()
-	,	inputHandler	:	NSInputStream		-> ()
-	,	errorHandler	:	NSStream			-> ()
-	,	endHandler		:	JMPStreamSession	-> ()
+	,	openHandler		:	NSStream		-> ()
+	,	inputHandler	:	NSInputStream	-> ()
+	,	errorHandler	:	NSStream		-> ()
+	,	endHandler		:	NSStream		-> ()
 	) {
 		self.openHandler	=	openHandler
 		self.inputHandler	=	inputHandler
@@ -166,8 +166,7 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 		case NSStreamEvent.ErrorOccurred:
 			errorHandler( theStream )
 		case NSStreamEvent.EndEncountered:
-			assert( theStream == inputStream )
-			endHandler( self )
+			endHandler( theStream )
 		case NSStreamEvent.None:
 			break
 		default:
