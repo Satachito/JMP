@@ -103,18 +103,11 @@ Alert(
 }
 
 func
-ErrorAlert( p: NSError ) {
-	let wAC = UIAlertController(
-		title			:	"\(p.domain):\(p.code)"
-	,	message			:	p.localizedDescription
-	,	preferredStyle	:	.Alert
-	)
-	wAC.addAction( UIAlertAction( title: "OK", style: .Cancel, handler: nil ) )
-	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
-		wAC
-	,	animated	:	true
-	,	completion	:	nil
-	)
+ErrorAlert(
+	p			:	NSError
+, _ handler		:	( UIAlertAction! -> () )! = nil
+) {
+	Alert( "\(p.domain):\(p.code)", p.localizedDescription, handler )
 }
 
 func
