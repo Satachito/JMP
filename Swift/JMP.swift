@@ -22,7 +22,7 @@ RandomData( p: Int ) -> NSData {
 	let wFD = open( "/dev/random", O_RDONLY )
 	assert( wFD > 2 )
 	var w = [ UInt8 ]( count: p, repeatedValue: 0 )
-	read( wFD, &w, UInt( p ) )
+	read( wFD, &w, Int( p ) )
 	close( wFD )
 	return NSData( bytes: w, length: p )
 }
@@ -70,8 +70,8 @@ IsNull( p: AnyObject? ) -> Bool {
 
 func
 AsInt( p: AnyObject? ) -> Int? {
-	if p is NSNumber { return ( p as? NSNumber )!.integerValue }
-	if p is String { return ( p as? NSString )!.integerValue }
+	if p is NSNumber { return ( p as! NSNumber ).integerValue }
+	if p is String { return ( p as! NSString ).integerValue }
 	return nil;
 }
 
@@ -92,23 +92,19 @@ Main( ed: () -> () ) {
 
 func
 DocumentDirectoryURLs() -> [ NSURL ] {
-	return (
-		NSFileManager.defaultManager().URLsForDirectory(
-			.DocumentDirectory
-		,	inDomains:.UserDomainMask
-		) as? [ NSURL ]
-	)!
+	return NSFileManager.defaultManager().URLsForDirectory(
+		.DocumentDirectory
+	,	inDomains:.UserDomainMask
+	) as! [ NSURL ]
 }
 
 func
 DocumentDirectoryPathes() -> [ String ] {
-	return (
-		NSSearchPathForDirectoriesInDomains(
-			.DocumentDirectory
-		,	.UserDomainMask
-		,	true
-		) as? [ String ]
-	)!
+	return NSSearchPathForDirectoriesInDomains(
+		.DocumentDirectory
+	,	.UserDomainMask
+	,	true
+	) as! [ String ]
 }
 /*
 class

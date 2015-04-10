@@ -53,7 +53,7 @@ JMPFetchedResultControllerVC: UITableViewController, NSFetchedResultsControllerD
 	tableView( UITableView, commitEditingStyle: UITableViewCellEditingStyle, forRowAtIndexPath:NSIndexPath ) {
 		switch commitEditingStyle {
 		case .Delete:
-			frc.managedObjectContext.deleteObject( ( frc.objectAtIndexPath( forRowAtIndexPath ) as? NSManagedObject )! )
+			frc.managedObjectContext.deleteObject( frc.objectAtIndexPath( forRowAtIndexPath ) as! NSManagedObject )
 			Update()
 		default:
 			break
