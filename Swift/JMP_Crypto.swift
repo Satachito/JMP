@@ -11,6 +11,8 @@ SHA1( p: NSData ) -> NSData {
 	return NSData( bytes: w, length: Int( CC_SHA1_DIGEST_LENGTH ) )
 }
 
+
+
 func
 DataCryptedByAES( operation: CCOperation, p: NSData, key: NSData, _ options: CCOptions = CCOptions( kCCOptionPKCS7Padding ), _ iv: NSData? = nil ) -> ( CCCryptorStatus, NSData ) {
 	var	wKeyLength = 0
@@ -21,17 +23,17 @@ DataCryptedByAES( operation: CCOperation, p: NSData, key: NSData, _ options: CCO
 
 	if iv != nil { assert( iv!.length == kCCBlockSizeAES128 ) }
 
-	var	wLength = UInt( ( ( p.length + kCCBlockSizeAES128 - 1 ) / kCCBlockSizeAES128 ) * kCCBlockSizeAES128 )
+	var	wLength = size_t( ( ( p.length + kCCBlockSizeAES128 - 1 ) / kCCBlockSizeAES128 ) * kCCBlockSizeAES128 )
 	let	v = NSMutableData( length: Int( wLength ) )!
 	let	s: CCCryptorStatus = CCCrypt(
 		operation
 	,	CCAlgorithm( kCCAlgorithmAES )
 	,	options
 	,	key.bytes
-	,	UInt( wKeyLength )
+	,	size_t( wKeyLength )
 	,	iv != nil ? iv!.bytes : nil
 	,	p.bytes
-	,	UInt( p.length )
+	,	size_t( p.length )
 	,	v.mutableBytes
 	,	wLength
 	,	&wLength
@@ -54,17 +56,17 @@ func
 DataCryptedByBlowfish( operation: CCOperation, p: NSData, key: NSData, _ options: CCOptions = CCOptions( kCCOptionPKCS7Padding ), _ iv: NSData? = nil ) -> ( CCCryptorStatus, NSData ) {
 	if iv != nil { assert( iv!.length == kCCBlockSizeBlowfish ) }
 
-	var	wLength = UInt( ( ( p.length + kCCBlockSizeBlowfish - 1 ) / kCCBlockSizeBlowfish ) * kCCBlockSizeBlowfish )
+	var	wLength = size_t( ( ( p.length + kCCBlockSizeBlowfish - 1 ) / kCCBlockSizeBlowfish ) * kCCBlockSizeBlowfish )
 	let	v = NSMutableData( length: Int( wLength ) )!
 	let	s: CCCryptorStatus = CCCrypt(
 		operation
 	,	CCAlgorithm( kCCAlgorithmBlowfish )
 	,	options
 	,	key.bytes
-	,	UInt( key.length )
+	,	size_t( key.length )
 	,	iv != nil ? iv!.bytes : nil
 	,	p.bytes
-	,	UInt( p.length )
+	,	size_t( p.length )
 	,	v.mutableBytes
 	,	wLength
 	,	&wLength

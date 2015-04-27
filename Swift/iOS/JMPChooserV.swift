@@ -5,14 +5,14 @@ import	UIKit
 
 class
 JMPChooserV : UIScrollView, UIScrollViewDelegate
-{	var	choosen	:	(( UIView ) -> Void)!
-	var	tapped	:	(( UIView ) -> Void)!
+{	var	choosen	:	UIView -> () = { p in }
+	var	tapped	:	UIView -> () = { p in }
 
 	var	choice	:	UIView! = nil {
 		didSet	{
 			if choice != nil {
 				if self.contentOffset.x == choice.center.x - self.bounds.size.width / 2 {
-					if choosen != nil { choosen( choice ) }
+					choosen( choice )
 				} else {
 					self.setContentOffset(
 						CGPointMake( choice.center.x - self.bounds.size.width / 2, self.contentOffset.y )
@@ -61,25 +61,25 @@ JMPChooserV : UIScrollView, UIScrollViewDelegate
 	func
 	Tapped( p : UITapGestureRecognizer ) {
 		if self.contentOffset.x == p.view!.center.x - self.bounds.size.width / 2 {
-			if tapped != nil { tapped( p.view! ) }
+			tapped( p.view! )
 		}
 		self.choice = p.view
 	}
 
 	func
 	scrollViewDidEndDecelerating( UIScrollView ) {
-		if choosen != nil { choosen( choice ) }
+		choosen( choice )
 	}
 
 	func
 	scrollViewDidEndDragging( scrollView: UIScrollView, willDecelerate: Bool ) {
 		if willDecelerate { return }
-		if choosen != nil { choosen( choice ) }
+		choosen( choice )
 	}
 
 	func
 	scrollViewDidEndScrollingAnimation( UIScrollView ) {
-		if choosen != nil { choosen( choice ) }
+		choosen( choice )
 	}
 
 	func
