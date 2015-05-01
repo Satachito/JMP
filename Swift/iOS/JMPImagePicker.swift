@@ -4,8 +4,8 @@ import	CoreMotion
 class
 JMPImagePicker: UIImagePickerController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-	var	toBack	:	( UIViewController -> () ) = { p in }
-	var	taken	:	( UIViewController -> () ) = { p in }
+	var	toBack	:	( UIViewController -> () ) = { _ in }
+	var	taken	:	( UIViewController -> () ) = { _ in }
 
 	var	uMM		: CMMotionManager!
 

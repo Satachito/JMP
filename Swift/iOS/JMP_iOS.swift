@@ -138,7 +138,7 @@ Image( path: String ) -> UIImage! {
 
 class
 V: UIView {
-	var	draw: CGRect -> () = { p in }
+	var	draw: CGRect -> () = { _ in }
 	override func
 	drawRect( p: CGRect ) {
 		super.drawRect( p )

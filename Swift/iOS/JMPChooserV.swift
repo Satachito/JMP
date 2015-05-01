@@ -5,8 +5,8 @@ import	UIKit
 
 class
 JMPChooserV : UIScrollView, UIScrollViewDelegate
-{	var	choosen	:	UIView -> () = { p in }
-	var	tapped	:	UIView -> () = { p in }
+{	var	choosen	:	UIView -> () = { _ in }
+	var	tapped	:	UIView -> () = { _ in }
 
 	var	choice	:	UIView! = nil {
 		didSet	{
