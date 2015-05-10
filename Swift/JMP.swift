@@ -28,6 +28,17 @@ RandomData( p: Int ) -> NSData {
 }
 
 func
+RandomIndices( p: Int ) -> [ Int ] {
+	var	v = [ Int ]()
+	for i in 0 ..< p { v.append( i ) }
+	for i in 0 ..< p {
+		let j = Int( arc4random_uniform( UInt32( p - i ) ) ) + i
+		( v[ i ], v[ j ] ) = ( v[ j ], v[ i ] )
+	}
+	return v
+}
+
+func
 UTF8Data( p: String ) -> NSData? {
 	return p.dataUsingEncoding( NSUTF8StringEncoding )
 }
