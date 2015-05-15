@@ -1,18 +1,6 @@
 import UIKit
 
 func
-Dist2( left: CGPoint, right: CGPoint ) -> Double {
-	let w = Double( right.x - left.x )
-	let h = Double( right.y - left.y )
-	return w * w + h * h
-}
-
-func
-Center( p: CGRect ) -> CGPoint {
-	return CGPointMake( CGRectGetMidX( p ), CGRectGetMidY( p ) )
-}
-
-func
 InputBox(
 	title		:	String!
 , _	message		:	String! = nil
@@ -145,4 +133,17 @@ V: UIView {
 		draw( p )
 	}
 }
+
+func
+AdjustHeight( p: UITextView ) {
+	var wRect = p.attributedText.boundingRectWithSize(
+		CGSizeMake( p.bounds.size.width - p.textContainerInset.left - p.textContainerInset.right - p.textContainer.lineFragmentPadding * 2, .max )
+	,	options	:	.UsesLineFragmentOrigin
+	,	context	:	nil
+	)
+	wRect.size.width += p.textContainerInset.left + p.textContainerInset.right + p.textContainer.lineFragmentPadding * 2
+	wRect.size.height += p.textContainerInset.top + p.textContainerInset.bottom
+	p.bounds = wRect
+}
+
 

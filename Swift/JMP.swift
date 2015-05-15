@@ -1,5 +1,6 @@
 import	Foundation
 import	AddressBook
+import	CoreGraphics
 
 func
 HexChar( p: Int ) -> Character {
@@ -117,6 +118,19 @@ DocumentDirectoryPathes() -> [ String ] {
 	,	true
 	) as! [ String ]
 }
+
+func
+Dist2( left: CGPoint, right: CGPoint ) -> Double {
+	let w = Double( right.x - left.x )
+	let h = Double( right.y - left.y )
+	return w * w + h * h
+}
+
+func
+Center( p: CGRect ) -> CGPoint {
+	return CGPointMake( CGRectGetMidX( p ), CGRectGetMidY( p ) )
+}
+
 /*
 class
 JMPSAddressBook : NSObject {
