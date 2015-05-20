@@ -135,11 +135,19 @@ V: UIView {
 }
 
 func
-AdjustHeight( p: UITextView ) {
-	var wRect = p.attributedText.boundingRectWithSize(
-		CGSizeMake( p.bounds.size.width - p.textContainerInset.left - p.textContainerInset.right - p.textContainer.lineFragmentPadding * 2, .max )
+BoundingRectWithWidth( p: NSAttributedString, width: CGFloat ) -> CGRect {
+	return p.boundingRectWithSize(
+		CGSizeMake( width, .max )
 	,	options	:	.UsesLineFragmentOrigin
 	,	context	:	nil
+	)
+}
+
+func
+AdjustHeight( p: UITextView ) {
+	var wRect = BoundingRectWithWidth(
+		p.attributedText
+	,	p.bounds.size.width - p.textContainerInset.left - p.textContainerInset.right - p.textContainer.lineFragmentPadding * 2
 	)
 	wRect.size.width += p.textContainerInset.left + p.textContainerInset.right + p.textContainer.lineFragmentPadding * 2
 	wRect.size.height += p.textContainerInset.top + p.textContainerInset.bottom

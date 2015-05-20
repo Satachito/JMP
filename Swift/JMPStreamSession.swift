@@ -41,11 +41,10 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 	func
 	Close() {
 		inputStream.close()
-		while buffer.length > 0 {
-			if _Write() < 0 { break }
-		}
+//		while buffer.length > 0 {
+//			if _Write() < 0 { break }
+//		}
 		outputStream.close()
-//println( "Closed" )
 
 		inputStream.delegate = nil
 		outputStream.delegate = nil
