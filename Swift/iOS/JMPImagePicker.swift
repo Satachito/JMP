@@ -72,27 +72,22 @@ JMPImagePicker: UIImagePickerController, UIImagePickerControllerDelegate, UINavi
 	func
 	imagePickerController(	//	Through Editing
 		picker								: UIImagePickerController
-	,	didFinishPickingMediaWithInfo info	: [ NSObject : AnyObject ]
+	,	didFinishPickingMediaWithInfo info	: [String: AnyObject]
 	) {
 		if let w = info[ UIImagePickerControllerOriginalImage ] as? UIImage {
 		
-			var	wImage: UIImage!
-			
 			switch picker.cameraDevice {
 			case .Rear:
-				oPreviewIV.image = UIImage( CGImage: w.CGImage, scale: 1, orientation: .Right )
-				wImage = w
+				oPreviewIV.image = UIImage( CGImage: w.CGImage!, scale: 1, orientation: .Right )
 			case .Front:
-				oPreviewIV.image = UIImage( CGImage: w.CGImage, scale: 1, orientation: .LeftMirrored )
 				switch w.imageOrientation {
-				case .Right:	wImage = UIImage( CGImage: w.CGImage, scale: 1, orientation: .LeftMirrored )	//	Portrait
-				case .Left:		wImage = UIImage( CGImage: w.CGImage, scale: 1, orientation: .RightMirrored )	//	UpsideDown
-				case .Up:		wImage = UIImage( CGImage: w.CGImage, scale: 1, orientation: .UpMirrored )		//	Right
-				case .Down:		wImage = UIImage( CGImage: w.CGImage, scale: 1, orientation: .DownMirrored )	//	Left
+				case .Right:	oPreviewIV.image = UIImage( CGImage: w.CGImage!, scale: 1, orientation: .LeftMirrored )	//	Portrait
+				case .Left:		oPreviewIV.image = UIImage( CGImage: w.CGImage!, scale: 1, orientation: .RightMirrored )	//	UpsideDown
+				case .Up:		oPreviewIV.image = UIImage( CGImage: w.CGImage!, scale: 1, orientation: .UpMirrored )		//	Right
+				case .Down:		oPreviewIV.image = UIImage( CGImage: w.CGImage!, scale: 1, orientation: .DownMirrored )	//	Left
 				default:		break;
 				}
 			}
-
 			dispatch_after(
 				dispatch_time( DISPATCH_TIME_NOW, Int64( NSEC_PER_SEC ) )
 			,	dispatch_get_main_queue()
@@ -127,7 +122,7 @@ JMPImagePicker: UIImagePickerController, UIImagePickerControllerDelegate, UINavi
 	
 	func
 	navigationController( navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool ) {
-		self.cameraOverlayView!.hidden = !( viewController == self.viewControllers[ 0 ] as? NSObject )
+		self.cameraOverlayView!.hidden = viewController != self.viewControllers[ 0 ]
 	}
 
 	func
@@ -140,11 +135,11 @@ JMPImagePicker: UIImagePickerController, UIImagePickerControllerDelegate, UINavi
 		//	Using main queue is not recommended. So create new operation queue and pass it to startAccelerometerUpdatesToQueue.
 		//	Dispatch U/I code to main thread using dispach_async in the handler.
 		uMM.startAccelerometerUpdatesToQueue( NSOperationQueue() ) { p, _ in
-			if p != nil {
-				let w = abs( p.acceleration.y ) < abs( p.acceleration.x )
-				?	p.acceleration.x > 0 ? M_PI * 3 / 2	:	M_PI / 2
-				:	p.acceleration.y > 0 ? M_PI			:	0
-				let	wAT = CGAffineTransformMakeRotation( CGFloat( w ) )
+			if let w = p {
+				let wR = abs( w.acceleration.y ) < abs( w.acceleration.x )
+				?	w.acceleration.x > 0 ? M_PI * 3 / 2	:	M_PI / 2
+				:	w.acceleration.y > 0 ? M_PI			:	0
+				let	wAT = CGAffineTransformMakeRotation( CGFloat( wR ) )
 				dispatch_async(
 					dispatch_get_main_queue()
 				,	{	Animate() {

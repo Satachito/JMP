@@ -13,10 +13,10 @@ JMPHorizontalLayoutV: UIView {
 		for wV in subviews {
 			wTotalSize += wV.frame.size.width
 		}
-		var	wMargin = ( bounds.size.width - wTotalSize ) / 2 / CGFloat( subviews.count )
+		let	wMargin = ( bounds.size.width - wTotalSize ) / 2 / CGFloat( subviews.count )
 		var	wExtentTotal = 0 as CGFloat
 		for i in 0 ..< subviews.count {
-			let	wV = subviews[ i ] as! UIView
+			let	wV = subviews[ i ] as UIView
 			wV.center = CGPointMake(
 				wV.frame.size.width / 2 + wExtentTotal + wMargin
 			,	wV.center.y

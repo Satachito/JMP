@@ -36,7 +36,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 		didSet {
 			let	wRect = CGRectMake( 0, 0, cellWidth, cellHeight )
 			for wV in targetViews {
-				var wTrayV = UIView( frame:wRect )
+				let wTrayV = UIView( frame:wRect )
 				wTrayV.userInteractionEnabled = true
 				wTrayV.addGestureRecognizer( UILongPressGestureRecognizer( target:self, action:"LongPressed:" ) )
 				addSubview( wTrayV )
@@ -44,7 +44,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 				wV.frame = wRect
 				wTrayV.addSubview( wV )
 				
-				var wDeleteIV = UIImageView( image:UIImage( named:"delete" ) )
+				let wDeleteIV = UIImageView( image:UIImage( named:"delete" ) )
 				wDeleteIV.userInteractionEnabled = true
 				wDeleteIV.addGestureRecognizer( UITapGestureRecognizer( target:self, action:"Delete:" ) )
 				wTrayV.addSubview( wDeleteIV )
@@ -60,7 +60,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 
 	func
 	SyncLayout() {
-		var wExtentH = CGRectGetWidth( self.bounds ) - outerMarginH * 2
+		let wExtentH = CGRectGetWidth( self.bounds ) - outerMarginH * 2
 		uCellNumH = Int( wExtentH / cellWidth )
 		uCellMarginH = ( ( wExtentH - CGFloat( uCellNumH ) * cellWidth ) / ( CGFloat( uCellNumH ) - 1 ) )
 		let wNumV = ( targetViews.count + uCellNumH - 1 ) / uCellNumH
@@ -75,7 +75,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 	SyncEditMode() {
 		if editMode {
 			for wV in targetViews {
-				( wV.superview!.subviews[ 1 ] as! UIView ).hidden = false
+				( wV.superview!.subviews[ 1 ] as UIView ).hidden = false
 			
 				let wBA = CABasicAnimation( keyPath:"transform.rotation" )
 				wBA.duration = 0.1
@@ -91,7 +91,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 			}
 		} else {
 			for wV in targetViews {
-				( wV.superview!.subviews[ 1 ] as! UIView ).hidden = true
+				( wV.superview!.subviews[ 1 ] as UIView ).hidden = true
 				wV.superview!.layer.removeAllAnimations()
 			}
 		}
@@ -147,9 +147,9 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 			for i in 0 ..< targetViews.count { targetViews[ i ].superview!.tag = i }
 		case .Changed:
 			p.view!.center = p.locationInView( p.view!.superview )
-			var	wTargetIndex = FindSlot( p )
+			let	wTargetIndex = FindSlot( p )
 			if wTargetIndex > 0 {
-				var	wSourceIndex = p.view!.tag
+				let	wSourceIndex = p.view!.tag
 				Animate() {
 					for i in 0 ..< self.targetViews.count {
 						if i != wSourceIndex {
@@ -162,11 +162,11 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 				}
 			}
 		case .Ended:
-			var	wTargetIndex = FindSlot( p )
+			let	wTargetIndex = FindSlot( p )
 			if (wTargetIndex != nil) {
-				var	wSourceIndex = p.view!.tag
+				let	wSourceIndex = p.view!.tag
 				if wSourceIndex != wTargetIndex {
-					var wV = targetViews.removeAtIndex( wSourceIndex )
+					let wV = targetViews.removeAtIndex( wSourceIndex )
 					targetViews.insert( wV, atIndex:wTargetIndex! )
 					if changed != nil { changed!() }
 				}
@@ -190,7 +190,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 	Delete( p: UITapGestureRecognizer ) {
 		sendSubviewToBack( p.view!.superview! )
 		for i in 0 ..< targetViews.count { targetViews[ i ].superview!.tag = i }
-		var	wTag = p.view!.superview!.tag	//	tag will be cleared next removeFromSuperview
+		let	wTag = p.view!.superview!.tag	//	tag will be cleared next removeFromSuperview
 		targetViews.removeAtIndex( wTag )
 		p.view!.superview!.removeFromSuperview()
 		AnimateToProperPosition()

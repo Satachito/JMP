@@ -55,23 +55,23 @@ UTF8String( p: UnsafePointer<UInt8>, length: Int ) -> String? {
 }
 
 func
-Base64String( p: NSData, options: NSDataBase64EncodingOptions = nil ) -> String {
+Base64String( p: NSData, options: NSDataBase64EncodingOptions = NSDataBase64EncodingOptions( rawValue: 0 ) ) -> String {
 	return p.base64EncodedStringWithOptions( options )
 }
 
 func
-Base64Data( p: String, options: NSDataBase64DecodingOptions = .IgnoreUnknownCharacters ) -> NSData? {
+Base64Data( p: String, options: NSDataBase64DecodingOptions = NSDataBase64DecodingOptions( rawValue: 0 ) ) -> NSData? {
 	return NSData( base64EncodedString: p, options: options )
 }
 
 func
-EncodeJSON( p: AnyObject, options: NSJSONWritingOptions = nil, error: NSErrorPointer = nil ) -> NSData? {
-	return NSJSONSerialization.dataWithJSONObject( p, options: options, error: error )
+EncodeJSON( p: AnyObject, options: NSJSONWritingOptions = NSJSONWritingOptions( rawValue: 0 ) ) throws -> NSData {
+	return try NSJSONSerialization.dataWithJSONObject( p, options: options )
 }
 
 func
-DecodeJSON( p: NSData, options: NSJSONReadingOptions = nil, error: NSErrorPointer = nil ) -> AnyObject? {
-	return NSJSONSerialization.JSONObjectWithData( p, options: options, error: error )
+DecodeJSON( p: NSData, options: NSJSONReadingOptions = NSJSONReadingOptions( rawValue: 0 ) ) throws -> AnyObject {
+	return try NSJSONSerialization.JSONObjectWithData( p, options: options )
 }
 
 func
@@ -103,21 +103,22 @@ Main( ed: () -> () ) {
 }
 
 func
-DocumentDirectoryURLs() -> [ NSURL ] {
-	return NSFileManager.defaultManager().URLsForDirectory(
-		.DocumentDirectory
-	,	inDomains:.UserDomainMask
-	) as! [ NSURL ]
+ResourcePath( resource: String, _ type: String = "" ) -> String? {
+	return NSBundle.mainBundle().pathForResource( resource, ofType: type )
 }
 
-func
-DocumentDirectoryPathes() -> [ String ] {
-	return NSSearchPathForDirectoriesInDomains(
-		.DocumentDirectory
-	,	.UserDomainMask
-	,	true
-	) as! [ String ]
-}
+var
+DocumentDirectoryURLs = NSFileManager.defaultManager().URLsForDirectory(
+	.DocumentDirectory
+,	inDomains:.UserDomainMask
+) as [ NSURL ]
+
+var
+DocumentDirectoryPathes = NSSearchPathForDirectoriesInDomains(
+	.DocumentDirectory
+,	.UserDomainMask
+,	true
+) as [ String ]
 
 func
 Dist2( left: CGPoint, right: CGPoint ) -> Double {
@@ -130,6 +131,57 @@ func
 Center( p: CGRect ) -> CGPoint {
 	return CGPointMake( CGRectGetMidX( p ), CGRectGetMidY( p ) )
 }
+
+func
+BalancedPosition( p: NSData ) -> Int? {
+	var	wBytes = UnsafePointer<UInt8>( p.bytes )
+	var	wBalance = 0
+	var	wInString = false
+	var	wInBackSlash = false
+
+	for i in 0 ..< p.length {
+		if wInString {
+			if wInBackSlash {
+				wInBackSlash = false
+			} else {
+				switch wBytes[ i ] {
+				case 0x5c:	//	\
+					wInBackSlash = true
+				case 0x22:
+					wInString = false
+				default:
+					break
+				}
+			}
+		} else {
+			switch wBytes[ i ] {
+			case 0x5b, 0x7b:	//	[	{
+				wBalance++
+			case 0x5d, 0x7d:	//	]	}
+				if wBalance-- == 0 { return nil }
+				if wBalance == 0 { return i + 1 }
+			case 0x22:
+				wInString = true
+				wInBackSlash = false
+			default:
+				break
+			}
+		}
+	}
+	return nil
+}
+
+func
+JSONForAll( data: NSMutableData, _ p: AnyObject -> () ) {
+	while let wBP = BalancedPosition( data ) {
+		let	wRange = NSMakeRange( 0, wBP )
+		do { let w: AnyObject = try DecodeJSON( data.subdataWithRange( wRange ) ); p( w ) } catch _ {
+		}
+		data.replaceBytesInRange( wRange, withBytes: nil, length: 0 )
+	}
+}
+
+typealias	JSONDict = [ String: AnyObject ]
 
 /*
 class

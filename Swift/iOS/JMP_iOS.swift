@@ -53,7 +53,7 @@ SpringAnimate(
 
 func
 BlockAlert(
-  _	title	:	String! = nil
+	title	:	String! = nil
 , _	message	:	String! = nil
 ) -> UIAlertController {
 	let	v = UIAlertController(
@@ -73,7 +73,7 @@ BlockAlert(
 
 func
 Alert(
-  _	title		:	String! = nil
+	title		:	String! = nil
 , _	message		:	String! = nil
 , _ handler		:	( UIAlertAction! -> () )! = nil
 ) {
@@ -100,7 +100,7 @@ ErrorAlert(
 
 func
 Confirmation(
-  _	title		:	String! = nil
+	title		:	String! = nil
 , _	message		:	String! = nil
 ,	handler		:	UIAlertAction! -> ()
 ) {
@@ -147,7 +147,7 @@ func
 AdjustHeight( p: UITextView ) {
 	var wRect = BoundingRectWithWidth(
 		p.attributedText
-	,	p.bounds.size.width - p.textContainerInset.left - p.textContainerInset.right - p.textContainer.lineFragmentPadding * 2
+	,	width: p.bounds.size.width - p.textContainerInset.left - p.textContainerInset.right - p.textContainer.lineFragmentPadding * 2
 	)
 	wRect.size.width += p.textContainerInset.left + p.textContainerInset.right + p.textContainer.lineFragmentPadding * 2
 	wRect.size.height += p.textContainerInset.top + p.textContainerInset.bottom

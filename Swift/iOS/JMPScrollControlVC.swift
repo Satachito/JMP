@@ -99,7 +99,7 @@ JMPScrollControlVC: UIViewController {
 		UIView.animateWithDuration	(	( ( p.userInfo as! [ NSString: AnyObject ] )[ UIKeyboardAnimationDurationUserInfoKey ] as! NSNumber ).doubleValue
 		,	delay					:	0
 		,	options					:	UIViewAnimationOptions(
-				UInt(
+				rawValue: UInt(
 					( ( p.userInfo as! [ NSString: AnyObject ] )[ UIKeyboardAnimationCurveUserInfoKey ] as! NSNumber ).unsignedIntValue << 16
 				)
 			)
@@ -122,7 +122,7 @@ JMPScrollControlVC: UIViewController {
 		super.viewWillAppear( p )
 
 		uDidChange = Notify( "UIKeyboardCandidateCorrectionDidChangeNotification" ) {
-			p in if let wV = self.oInputV.inputAccessoryView!.superview { self.AdjustWithAccessoryV() }
+			p in if let _ = self.oInputV.inputAccessoryView!.superview { self.AdjustWithAccessoryV() }
 		}
 		uWillShow = Notify( UIKeyboardWillShowNotification ) {
 			p in self.AdjustWithKB( p )
