@@ -4,7 +4,7 @@ import	CoreGraphics
 
 func
 HexChar( p: Int ) -> Character {
-	return [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" ][ p & 0x0f ];
+	return [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" ][ p & 0x0f ]
 }
 
 func
@@ -84,7 +84,7 @@ func
 AsInt( p: AnyObject? ) -> Int? {
 	if p is NSNumber { return ( p as! NSNumber ).integerValue }
 	if p is String { return ( p as! NSString ).integerValue }
-	return nil;
+	return nil
 }
 
 func
@@ -175,7 +175,9 @@ func
 JSONForAll( data: NSMutableData, _ p: AnyObject -> () ) {
 	while let wBP = BalancedPosition( data ) {
 		let	wRange = NSMakeRange( 0, wBP )
-		do { let w: AnyObject = try DecodeJSON( data.subdataWithRange( wRange ) ); p( w ) } catch _ {
+		do {
+			p( try DecodeJSON( data.subdataWithRange( wRange ) ) )
+		} catch _ {
 		}
 		data.replaceBytesInRange( wRange, withBytes: nil, length: 0 )
 	}

@@ -44,12 +44,12 @@ DataCryptedByAES( operation: CCOperation, p: NSData, key: NSData, _ options: CCO
 
 func
 DataEncryptedByAES( p: NSData, key: NSData, _ options: CCOptions = CCOptions( kCCOptionPKCS7Padding ), _ iv: NSData? = nil ) -> ( CCCryptorStatus, NSData ) {
-	return DataCryptedByAES( CCOperation( kCCEncrypt ), p, key, options, iv )
+	return DataCryptedByAES( CCOperation( kCCEncrypt ), p: p, key: key, options, iv )
 }
 
 func
 DataDecryptedByAES( p: NSData, key: NSData, _ options: CCOptions = CCOptions( kCCOptionPKCS7Padding ), _ iv: NSData? = nil ) -> ( CCCryptorStatus, NSData ) {
-	return DataCryptedByAES( CCOperation( kCCDecrypt ), p, key, options, iv )
+	return DataCryptedByAES( CCOperation( kCCDecrypt ), p: p, key: key, options, iv )
 }
 
 func
@@ -77,11 +77,11 @@ DataCryptedByBlowfish( operation: CCOperation, p: NSData, key: NSData, _ options
 
 func
 DataEncryptedByBlowfish( p: NSData, key: NSData, _ options: CCOptions = CCOptions( kCCOptionPKCS7Padding ), _ iv: NSData? = nil ) -> ( CCCryptorStatus, NSData ) {
-	return DataCryptedByBlowfish( CCOperation( kCCEncrypt ), p, key, options, iv )
+	return DataCryptedByBlowfish( CCOperation( kCCEncrypt ), p: p, key: key, options, iv )
 }
 
 func
 DataDecryptedByBlowfish( p: NSData, key: NSData, _ options: CCOptions = CCOptions( kCCOptionPKCS7Padding ), _ iv: NSData? = nil ) -> ( CCCryptorStatus, NSData ) {
-	return DataCryptedByBlowfish( CCOperation( kCCDecrypt ), p, key, options, iv )
+	return DataCryptedByBlowfish( CCOperation( kCCDecrypt ), p: p, key: key, options, iv )
 }
 
