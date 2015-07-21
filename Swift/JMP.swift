@@ -103,6 +103,37 @@ Main( ed: () -> () ) {
 }
 
 func
+Delay( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
+	return NSTimer.scheduledTimerWithTimeInterval(
+		NSTimeInterval( p )
+	,	target:	NSBlockOperation( block: { ed() } )
+	,	selector: "main"
+	,	userInfo: nil
+	,	repeats: false
+	)
+}
+
+func
+Repeat( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
+	return NSTimer.scheduledTimerWithTimeInterval(
+		NSTimeInterval( p )
+	,	target:	NSBlockOperation( block: { ed() } )
+	,	selector: "main"
+	,	userInfo: nil
+	,	repeats: true
+	)
+}
+
+func
+Delay( p: NSTimeInterval, _ queue: dispatch_queue_t, ed: () -> () ) {
+	dispatch_after(
+		dispatch_time( DISPATCH_TIME_NOW, Int64( p * NSTimeInterval( NSEC_PER_SEC ) ) )
+	,	queue
+	,	ed
+	)
+}
+
+func
 ResourcePath( resource: String, _ type: String = "" ) -> String? {
 	return NSBundle.mainBundle().pathForResource( resource, ofType: type )
 }
