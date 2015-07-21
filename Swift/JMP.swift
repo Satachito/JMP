@@ -55,22 +55,22 @@ UTF8String( p: UnsafePointer<UInt8>, length: Int ) -> String? {
 }
 
 func
-Base64String( p: NSData, options: NSDataBase64EncodingOptions = NSDataBase64EncodingOptions( rawValue: 0 ) ) -> String {
+Base64String( p: NSData, _ options: NSDataBase64EncodingOptions = [] ) -> String {
 	return p.base64EncodedStringWithOptions( options )
 }
 
 func
-Base64Data( p: String, options: NSDataBase64DecodingOptions = NSDataBase64DecodingOptions( rawValue: 0 ) ) -> NSData? {
+Base64Data( p: String, _ options: NSDataBase64DecodingOptions = [] ) -> NSData? {
 	return NSData( base64EncodedString: p, options: options )
 }
 
 func
-EncodeJSON( p: AnyObject, options: NSJSONWritingOptions = NSJSONWritingOptions( rawValue: 0 ) ) throws -> NSData {
+EncodeJSON( p: AnyObject, _ options: NSJSONWritingOptions = [] ) throws -> NSData {
 	return try NSJSONSerialization.dataWithJSONObject( p, options: options )
 }
 
 func
-DecodeJSON( p: NSData, options: NSJSONReadingOptions = NSJSONReadingOptions( rawValue: 0 ) ) throws -> AnyObject {
+DecodeJSON( p: NSData, _ options: NSJSONReadingOptions = [] ) throws -> AnyObject {
 	return try NSJSONSerialization.JSONObjectWithData( p, options: options )
 }
 
