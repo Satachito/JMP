@@ -2,10 +2,10 @@ import UIKit
 
 func
 InputBox(
-	title		:	String!
-, _	message		:	String! = nil
-, _	config		:	( UITextField! -> () )! = nil
-,	ok			:	( UITextField! -> () )
+	title		:	String
+, _	message		:	String? = nil
+, _	config		:	UITextField -> () = { _ in }
+,	ed			:	UITextField -> ()
 ) {
 	let wAC = UIAlertController(
 		title			:	title
@@ -14,11 +14,11 @@ InputBox(
 	)
 	var wTF : UITextField!
 	wAC.addTextFieldWithConfigurationHandler { p in
-		if config != nil { config( p ) }
+		config( p )
 		wTF = p
 	}
 	wAC.addAction( UIAlertAction( title: "Cancel", style: .Cancel, handler:nil ) )
-	wAC.addAction( UIAlertAction( title: "OK", style: .Default ) { _ in ok( wTF ) } )
+	wAC.addAction( UIAlertAction( title: "OK", style: .Default ) { _ in ed( wTF ) } )
 	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
 		wAC
 	,	animated:true
@@ -53,8 +53,8 @@ SpringAnimate(
 
 func
 BlockAlert(
-	title	:	String! = nil
-, _	message	:	String! = nil
+	title	:	String? = nil
+, _	message	:	String? = nil
 ) -> UIAlertController {
 	let	v = UIAlertController(
 		title			:	title
@@ -73,9 +73,9 @@ BlockAlert(
 
 func
 Alert(
-	title		:	String! = nil
-, _	message		:	String! = nil
-, _ handler		:	( UIAlertAction! -> () )! = nil
+	title		:	String? = nil
+, _	message		:	String? = nil
+, _	handler		:	UIAlertAction -> () = { _ in }
 ) {
 	let wAC = UIAlertController(
 		title			:	title
@@ -93,9 +93,18 @@ Alert(
 func
 ErrorAlert(
 	p			:	NSError
-, _ handler		:	( UIAlertAction! -> () )! = nil
+, _	handler		:	UIAlertAction! -> () = { _ in }
 ) {
 	Alert( "\(p.domain):\(p.code)", p.localizedDescription, handler )
+}
+
+func
+HTMLAlert(
+	r			:	NSHTTPURLResponse
+, _	d			:	NSData
+, _	handler		:	UIAlertAction! -> () = { _ in }
+ ) {
+	Alert( r.description, nil, handler )
 }
 
 func
@@ -152,6 +161,52 @@ AdjustHeight( p: UITextView ) {
 	wRect.size.width += p.textContainerInset.left + p.textContainerInset.right + p.textContainer.lineFragmentPadding * 2
 	wRect.size.height += p.textContainerInset.top + p.textContainerInset.bottom
 	p.bounds = wRect
+}
+
+func
+JSON(
+	p	: String
+,	ed	: AnyObject -> ()
+) {
+	GetJSON(
+		p
+	,	er: { e in ErrorAlert( e ) }
+	,	ex:	{ r, d in HTMLAlert( r, d ) }
+	,	ed: ed
+	)
+}
+
+func
+Image(
+	p	: String
+,	er	: ( NSError ) -> () = { e in }
+,	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
+,	ed	: UIImage -> ()
+) {
+	Get( p, er: er, ex: ex ) { p in
+		if let wImage = UIImage( data: p ) {
+			ed( wImage )
+		} else {
+			assert( false )
+		}
+	}
+}
+
+class
+PhotoVC		:	UIViewController {
+						var	uri	:	String?
+	@IBOutlet	weak	var	oIV	:	UIImageView!
+
+	override func
+	viewWillAppear( p: Bool ) {
+		super.viewWillAppear( p )
+
+		if let w = uri {
+			Image( w ) { p in
+				self.oIV.image = p
+			}
+		}
+	}
 }
 
 

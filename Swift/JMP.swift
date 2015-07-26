@@ -82,8 +82,9 @@ IsNull( p: AnyObject? ) -> Bool {
 
 func
 AsInt( p: AnyObject? ) -> Int? {
-	if p is NSNumber { return ( p as! NSNumber ).integerValue }
-	if p is String { return ( p as! NSString ).integerValue }
+	if let w = p where w is NSNumber || w is String {
+		return w.integerValue
+	}
 	return nil
 }
 
@@ -138,18 +139,27 @@ ResourcePath( resource: String, _ type: String = "" ) -> String? {
 	return NSBundle.mainBundle().pathForResource( resource, ofType: type )
 }
 
-var
-DocumentDirectoryURLs = NSFileManager.defaultManager().URLsForDirectory(
-	.DocumentDirectory
-,	inDomains:.UserDomainMask
-) as [ NSURL ]
+func
+ResourceURL( resource: String, _ type: String = "" ) -> NSURL? {
+	return NSBundle.mainBundle().URLForResource( resource, withExtension: type )
+}
 
-var
-DocumentDirectoryPathes = NSSearchPathForDirectoriesInDomains(
-	.DocumentDirectory
-,	.UserDomainMask
-,	true
-) as [ String ]
+func
+DocumentDirectoryURLs() -> [ NSURL ] {
+	return NSFileManager.defaultManager().URLsForDirectory(
+						.DocumentDirectory
+	,	inDomains	:	.UserDomainMask
+	) as [ NSURL ]
+}
+
+func
+DocumentDirectoryPathes() -> [ String ] {
+	return NSSearchPathForDirectoriesInDomains(
+		.DocumentDirectory
+	,	.UserDomainMask
+	,	true
+	) as [ String ]
+}
 
 func
 Dist2( left: CGPoint, right: CGPoint ) -> Double {
@@ -208,13 +218,60 @@ JSONForAll( data: NSMutableData, _ p: AnyObject -> () ) {
 		let	wRange = NSMakeRange( 0, wBP )
 		do {
 			p( try DecodeJSON( data.subdataWithRange( wRange ) ) )
-		} catch _ {
+		} catch {
 		}
 		data.replaceBytesInRange( wRange, withBytes: nil, length: 0 )
 	}
 }
 
+func
+Get(
+	p	: String
+,	er	: ( NSError ) -> () = { e in }
+,	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
+,	ed	: NSData -> ()
+) {
+	NSURLConnection.sendAsynchronousRequest	(	NSURLRequest( URL: NSURL( string: p )! )
+	,	queue								:	NSOperationQueue.mainQueue()
+	) {	r, d, e in
+		if let wE = e { er( wE ) }
+		else {
+			if let
+				wR = r as? NSHTTPURLResponse
+			,	wD = d {
+				switch wR.statusCode {
+				case 200:
+					ed( wD )
+				default:
+					ex( wR, wD )
+				}
+			} else {
+				assert( false )
+			}
+		}
+	}
+}
+
+func
+GetJSON(
+	p	: String
+,	er	: ( NSError ) -> () = { e in }
+,	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
+,	ed	: AnyObject -> ()
+) {
+	Get( p, er: er, ex: ex ) { p in
+		do {
+			ed( try DecodeJSON( p ) )
+		} catch let e as NSError {
+			er( e )
+		} catch {
+			assert( false )
+		}
+	}
+}
+
 typealias	JSONDict = [ String: AnyObject ]
+
 
 /*
 class
