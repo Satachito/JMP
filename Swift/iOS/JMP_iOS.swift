@@ -193,7 +193,7 @@ Image(
 }
 
 class
-PhotoVC		:	UIViewController {
+ImageVC		:	UIViewController {
 						var	uri	:	String?
 	@IBOutlet	weak	var	oIV	:	UIImageView!
 
