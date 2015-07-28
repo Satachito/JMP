@@ -166,7 +166,7 @@ AdjustHeight( p: UITextView ) {
 func
 JSON(
 	p	: String
-,	ed	: AnyObject -> ()
+, _	ed	: AnyObject -> ()
 ) {
 	GetJSON(
 		p
@@ -179,9 +179,9 @@ JSON(
 func
 Image(
 	p	: String
-,	er	: ( NSError ) -> () = { e in }
-,	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
-,	ed	: UIImage -> ()
+, _	er	: ( NSError ) -> () = { e in ErrorAlert( e ) }
+, _	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in HTMLAlert( r, d ) }
+, _	ed	: UIImage -> ()
 ) {
 	Get( p, er, ex ) { p in
 		if let wImage = UIImage( data: p ) {
@@ -193,17 +193,41 @@ Image(
 }
 
 class
-ImageVC		:	UIViewController {
-						var	uri	:	String?
-	@IBOutlet	weak	var	oIV	:	UIImageView!
-
-	override func
-	viewWillAppear( p: Bool ) {
-		super.viewWillAppear( p )
-
-		if let w = uri {
-			Image( w ) { p in
-				self.oIV.image = p
+ImageV	:	UIImageView {
+	var
+	aiStyle	=	UIActivityIndicatorViewStyle.WhiteLarge
+	let
+	label	=	UILabel()
+	
+	func
+	ShowMessage( p: String ) {
+		label.text = p
+		label.numberOfLines = 0
+		label.frame = bounds
+		addSubview( label )
+	}
+	
+	var
+	uri		:	String? {
+		didSet {
+			label.removeFromSuperview()
+			let	wAIV = UIActivityIndicatorView( activityIndicatorStyle: aiStyle )
+			addSubview( wAIV )
+			wAIV.center = Center( bounds )
+			wAIV.startAnimating()
+			Image(
+				uri!
+			,	{	e in
+					wAIV.removeFromSuperview()
+					self.ShowMessage( e.description )
+				}
+			,	{	r, d in
+					wAIV.removeFromSuperview()
+					self.ShowMessage( r.description )
+				}
+			) { p in
+				wAIV.removeFromSuperview()
+				self.image = p
 			}
 		}
 	}
