@@ -162,7 +162,7 @@ DocumentDirectoryPathes() -> [ String ] {
 }
 
 func
-Dist2( left: CGPoint, right: CGPoint ) -> Double {
+Dist2( left: CGPoint, _ right: CGPoint ) -> Double {
 	let w = Double( right.x - left.x )
 	let h = Double( right.y - left.y )
 	return w * w + h * h
@@ -227,9 +227,9 @@ JSONForAll( data: NSMutableData, _ p: AnyObject -> () ) {
 func
 Get(
 	p	: String
-,	er	: ( NSError ) -> () = { e in }
-,	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
-,	ed	: NSData -> ()
+, _	er	: ( NSError ) -> () = { e in }
+, _	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
+, _	ed	: NSData -> ()
 ) {
 	NSURLConnection.sendAsynchronousRequest	(	NSURLRequest( URL: NSURL( string: p )! )
 	,	queue								:	NSOperationQueue.mainQueue()
@@ -255,11 +255,11 @@ Get(
 func
 GetJSON(
 	p	: String
-,	er	: ( NSError ) -> () = { e in }
-,	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
-,	ed	: AnyObject -> ()
+, _	er	: ( NSError ) -> () = { e in }
+, _	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
+, _	ed	: AnyObject -> ()
 ) {
-	Get( p, er: er, ex: ex ) { p in
+	Get( p, er, ex ) { p in
 		do {
 			ed( try DecodeJSON( p ) )
 		} catch let e as NSError {

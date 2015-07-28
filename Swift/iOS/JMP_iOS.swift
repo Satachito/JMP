@@ -170,9 +170,9 @@ JSON(
 ) {
 	GetJSON(
 		p
-	,	er: { e in ErrorAlert( e ) }
-	,	ex:	{ r, d in HTMLAlert( r, d ) }
-	,	ed: ed
+	,	{ e in ErrorAlert( e ) }
+	,	{ r, d in HTMLAlert( r, d ) }
+	,	ed
 	)
 }
 
@@ -183,7 +183,7 @@ Image(
 ,	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
 ,	ed	: UIImage -> ()
 ) {
-	Get( p, er: er, ex: ex ) { p in
+	Get( p, er, ex ) { p in
 		if let wImage = UIImage( data: p ) {
 			ed( wImage )
 		} else {
