@@ -225,13 +225,18 @@ JSONForAll( data: NSMutableData, _ p: AnyObject -> () ) {
 }
 
 func
-Get(
-	p	: String
-, _	er	: ( NSError ) -> () = { e in }
-, _	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
-, _	ed	: NSData -> ()
+HTML(
+	uri		: String
+, _	method	: String
+, _	body	: NSData? = nil
+, _	er		: ( NSError ) -> () = { e in }
+, _	ex		: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
+, _	ed		: NSData -> () = { p in }
 ) {
-	NSURLConnection.sendAsynchronousRequest	(	NSURLRequest( URL: NSURL( string: p )! )
+	let	wR = NSMutableURLRequest( URL: NSURL( string: uri )! )
+	wR.HTTPMethod = method
+	if body != nil { wR.HTTPBody = body! }
+	NSURLConnection.sendAsynchronousRequest	(	wR
 	,	queue								:	NSOperationQueue.mainQueue()
 	) {	r, d, e in
 		if let wE = e { er( wE ) }
@@ -253,20 +258,30 @@ Get(
 }
 
 func
-GetJSON(
-	p	: String
-, _	er	: ( NSError ) -> () = { e in }
-, _	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
-, _	ed	: AnyObject -> ()
+JSON(
+	uri		: String
+, _	method	: String
+, _	json	: AnyObject? = nil
+, _	er		: ( NSError ) -> () = { e in }
+, _	ex		: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
+, _	ed		: AnyObject -> () = { p in }
 ) {
-	Get( p, er, ex ) { p in
-		do {
-			ed( try DecodeJSON( p ) )
-		} catch let e as NSError {
-			er( e )
-		} catch {
-			assert( false )
+	do {
+		var	wBody	:	NSData?
+		if let wJSON = json { wBody = try EncodeJSON( wJSON ) }
+		HTML( uri, method, wBody, er, ex ) { p in
+			do {
+				ed( try DecodeJSON( p ) )
+			} catch let e as NSError {
+				er( e )
+			} catch {
+				assert( false )
+			}
 		}
+	} catch let e as NSError {
+		er( e )
+	} catch {
+		assert( false )
 	}
 }
 
