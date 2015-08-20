@@ -61,20 +61,22 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 		CFReadStreamSetProperty( inputStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue )
 		CFWriteStreamSetProperty( outputStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue )
 
+CFReadStreamSetProperty(inputStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);
+CFWriteStreamSetProperty(outputStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);
+/*
 		if let wTLSMode = tlsMode {
 			CFWriteStreamSetProperty(
 				outputStream
 			,	kCFStreamSocketSecurityLevelNegotiatedSSL
 			,	kCFStreamPropertySocketSecurityLevel
 			)
-			let wS: NSString = kCFStreamSSLValidatesCertificateChain	//	Sit outside the function below for XCode6.3Beta1
 			CFWriteStreamSetProperty(
 				outputStream
 			,	kCFStreamPropertySSLSettings
-			,	[ wS: wTLSMode == .ValidateCertificate ]
+			,	[ kCFStreamSSLValidatesCertificateChain as String: kCFBooleanTrue ]	//	wTLSMode == .ValidateCertificate ]
 			)
 		}
-
+*/
 		inputStream.delegate = self
 		outputStream.delegate = self
 
@@ -89,11 +91,11 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 	init(
 		host			:	String
 	,	port			:	Int
-	,	tlsMode			:	TLSMode?
-	,	openHandler		:	NSStream		-> ()
-	,	inputHandler	:	NSInputStream	-> ()
-	,	errorHandler	:	NSStream		-> ()
-	,	endHandler		:	NSStream		-> ()
+	,	tlsMode			:	TLSMode? = nil
+	,	openHandler		:	NSStream		-> () = { _ in }
+	,	errorHandler	:	NSStream		-> () = { _ in }
+	,	endHandler		:	NSStream		-> () = { _ in }
+	, 	inputHandler	:	NSInputStream	-> ()
 	) {
 		self.openHandler	=	openHandler
 		self.inputHandler	=	inputHandler
@@ -120,11 +122,11 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 
 	init(
 		socket			:	CFSocketNativeHandle
-	,	tlsMode			:	TLSMode?
-	,	openHandler		:	NSStream		-> ()
+	, _	tlsMode			:	TLSMode?
+	, _	openHandler		:	NSStream		-> ()
+	, _	errorHandler	:	NSStream		-> ()
+	, _	endHandler		:	NSStream		-> ()
 	,	inputHandler	:	NSInputStream	-> ()
-	,	errorHandler	:	NSStream		-> ()
-	,	endHandler		:	NSStream		-> ()
 	) {
 		self.openHandler	=	openHandler
 		self.inputHandler	=	inputHandler

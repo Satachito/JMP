@@ -288,6 +288,22 @@ JSON(
 typealias	JSONDict = [ String: AnyObject ]
 
 
+func
+ShowSharedCookies() {
+	if let wCs = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
+		for w in wCs { print( w ) }
+	}
+}
+
+func
+DeleteSharedCookies() {
+	let	wCS = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+	if let wCs = wCS.cookies {
+		for w in wCs { wCS.deleteCookie( w ) }
+	}
+}
+
+
 /*
 class
 JMPSAddressBook : NSObject {
