@@ -40,6 +40,11 @@ RandomIndices( p: Int ) -> [ Int ] {
 }
 
 func
+UTF8Length( p: String ) -> Int {
+	return p.lengthOfBytesUsingEncoding( NSUTF8StringEncoding )
+}
+
+func
 UTF8Data( p: String ) -> NSData? {
 	return p.dataUsingEncoding( NSUTF8StringEncoding )
 }
@@ -175,7 +180,7 @@ Center( p: CGRect ) -> CGPoint {
 
 func
 BalancedPosition( p: NSData ) -> Int? {
-	var	wBytes = UnsafePointer<UInt8>( p.bytes )
+	let	wBytes = UnsafePointer<UInt8>( p.bytes )
 	var	wBalance = 0
 	var	wInString = false
 	var	wInBackSlash = false
