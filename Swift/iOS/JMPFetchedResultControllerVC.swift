@@ -43,30 +43,30 @@ JMPFetchedResultControllerVC: UITableViewController, NSFetchedResultsControllerD
 	}
 
 	override	func
-	numberOfSectionsInTableView( UITableView ) -> Int {
+	numberOfSectionsInTableView( _: UITableView ) -> Int {
         return frc.sections?.count ?? 0
 	}
 
 	override	func
-	tableView( UITableView, numberOfRowsInSection: Int ) -> Int {
+	tableView( _: UITableView, numberOfRowsInSection: Int ) -> Int {
 		return frc.sections![ numberOfRowsInSection ].numberOfObjects;
 	}
 
 	override	func
-	tableView( UITableView, canEditRowAtIndexPath: NSIndexPath ) -> Bool {
+	tableView( _: UITableView, canEditRowAtIndexPath: NSIndexPath ) -> Bool {
 		return true
 	}
 
 	override	func
-	tableView( UITableView, canMoveRowAtIndexPath:NSIndexPath ) -> Bool {
+	tableView( _: UITableView, canMoveRowAtIndexPath:NSIndexPath ) -> Bool {
 		return true;
 	}
 
 	override	func
-	tableView( UITableView, commitEditingStyle: UITableViewCellEditingStyle, forRowAtIndexPath:NSIndexPath ) {
+	tableView( _: UITableView, commitEditingStyle: UITableViewCellEditingStyle, forRowAtIndexPath:NSIndexPath ) {
 		switch commitEditingStyle {
 		case .Delete:
-			frc.managedObjectContext.deleteObject( frc.objectAtIndexPath( forRowAtIndexPath ) as NSManagedObject )
+			frc.managedObjectContext.deleteObject( frc.objectAtIndexPath( forRowAtIndexPath ) as! NSManagedObject )
 			try! frc.managedObjectContext.save()
 		default:
 			break
@@ -74,7 +74,7 @@ JMPFetchedResultControllerVC: UITableViewController, NSFetchedResultsControllerD
 	}
 
 	func
-	controllerWillChangeContent( NSFetchedResultsController ) {
+	controllerWillChangeContent( _: NSFetchedResultsController ) {
 		tableView.beginUpdates()
 	}
 
@@ -93,10 +93,9 @@ JMPFetchedResultControllerVC: UITableViewController, NSFetchedResultsControllerD
 			break;
 		}
 	}
-
 	func
 	controller(				controller	: NSFetchedResultsController
-	,	didChangeObject		anObject	: NSManagedObject
+	,	didChangeObject		anObject	: AnyObject
 	,	atIndexPath			indexPath	: NSIndexPath?
 	,	forChangeType		type		: NSFetchedResultsChangeType
 	,						newIndexPath: NSIndexPath?
@@ -116,7 +115,7 @@ JMPFetchedResultControllerVC: UITableViewController, NSFetchedResultsControllerD
 	}
 
 	func
-	controllerDidChangeContent( NSFetchedResultsController ) {
+	controllerDidChangeContent( _: NSFetchedResultsController ) {
 		tableView.endUpdates()
 	}
 }

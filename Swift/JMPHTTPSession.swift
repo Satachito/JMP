@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 class
 JMPSession: NSObject, NSStreamDelegate {

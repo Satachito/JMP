@@ -48,7 +48,7 @@ JMPChooserV : UIScrollView, UIScrollViewDelegate
 
 	required
 	init( coder p: NSCoder ) {
-		super.init( coder: p )
+		super.init( coder: p )!
 		self.delegate = self;
 	}
 
@@ -67,24 +67,24 @@ JMPChooserV : UIScrollView, UIScrollViewDelegate
 	}
 
 	func
-	scrollViewDidEndDecelerating( UIScrollView ) {
+	scrollViewDidEndDecelerating( _: UIScrollView ) {
 		choosen( choice )
 	}
 
 	func
-	scrollViewDidEndDragging( scrollView: UIScrollView, willDecelerate: Bool ) {
+	scrollViewDidEndDragging( _: UIScrollView, willDecelerate: Bool ) {
 		if willDecelerate { return }
 		choosen( choice )
 	}
 
 	func
-	scrollViewDidEndScrollingAnimation( UIScrollView ) {
+	scrollViewDidEndScrollingAnimation( _: UIScrollView ) {
 		choosen( choice )
 	}
 
 	func
 	scrollViewWillEndDragging(
-		UIScrollView
+		_					:	UIScrollView
 	,	withVelocity		:	CGPoint
 	,	targetContentOffset	:	UnsafeMutablePointer<CGPoint>
 	) {

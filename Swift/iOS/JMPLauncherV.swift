@@ -99,7 +99,7 @@ JMPLauncherV : UIScrollView, UIScrollViewDelegate {
 	
 	required
 	init( coder p: NSCoder ) {
-		super.init( coder: p )
+		super.init( coder: p )!
 		addGestureRecognizer( UITapGestureRecognizer( target:self, action:"Tapped:" ) )
 	}
 
