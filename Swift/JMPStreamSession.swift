@@ -61,9 +61,9 @@ JMPStreamSession: NSObject, NSStreamDelegate {
 		CFReadStreamSetProperty( inputStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue )
 		CFWriteStreamSetProperty( outputStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue )
 
-CFReadStreamSetProperty(inputStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);
-CFWriteStreamSetProperty(outputStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);
-/*
+//CFReadStreamSetProperty(inputStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);
+//CFWriteStreamSetProperty(outputStream, kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL);
+
 		if let wTLSMode = tlsMode {
 			CFWriteStreamSetProperty(
 				outputStream
@@ -73,10 +73,10 @@ CFWriteStreamSetProperty(outputStream, kCFStreamPropertySocketSecurityLevel, kCF
 			CFWriteStreamSetProperty(
 				outputStream
 			,	kCFStreamPropertySSLSettings
-			,	[ kCFStreamSSLValidatesCertificateChain as String: kCFBooleanTrue ]	//	wTLSMode == .ValidateCertificate ]
+			,	[ kCFStreamSSLValidatesCertificateChain as String: wTLSMode == .ValidateCertificate ? kCFBooleanTrue : kCFBooleanFalse ]
 			)
 		}
-*/
+
 		inputStream.delegate = self
 		outputStream.delegate = self
 
