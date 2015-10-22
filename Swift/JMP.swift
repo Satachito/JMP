@@ -109,6 +109,11 @@ Main( ed: () -> () ) {
 }
 
 func
+Sub( ed: () -> () ) {
+	dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ed )
+}
+
+func
 Delay( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 	return NSTimer.scheduledTimerWithTimeInterval(
 		NSTimeInterval( p )
