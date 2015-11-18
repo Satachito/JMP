@@ -64,19 +64,38 @@ Base64String( p: NSData, _ options: NSDataBase64EncodingOptions = [] ) -> String
 	return p.base64EncodedStringWithOptions( options )
 }
 
+enum
+JMPError: ErrorType {
+	case	Base64Encode
+	case	EncodeJSON
+	case	DecodeJSON
+}
+
 func
-Base64Data( p: String, _ options: NSDataBase64DecodingOptions = [] ) -> NSData? {
-	return NSData( base64EncodedString: p, options: options )
+Base64Data( p: String, _ options: NSDataBase64DecodingOptions = [] ) throws -> NSData {
+	if let v = NSData( base64EncodedString: p, options: options ) {
+		return v
+	} else {
+		throw JMPError.Base64Encode
+	}
 }
 
 func
 EncodeJSON( p: AnyObject, _ options: NSJSONWritingOptions = [] ) throws -> NSData {
-	return try NSJSONSerialization.dataWithJSONObject( p, options: options )
+	do {
+		return try NSJSONSerialization.dataWithJSONObject( p, options: options )
+	} catch {
+		throw JMPError.EncodeJSON
+	}
 }
 
 func
 DecodeJSON( p: NSData, _ options: NSJSONReadingOptions = [] ) throws -> AnyObject {
-	return try NSJSONSerialization.JSONObjectWithData( p, options: options )
+	do {
+		return try NSJSONSerialization.JSONObjectWithData( p, options: options )
+	} catch {
+		throw JMPError.DecodeJSON
+	}
 }
 
 func
