@@ -145,7 +145,6 @@ Delay( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 
 func
 Repeat( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
-	ed()
 	return NSTimer.scheduledTimerWithTimeInterval(
 		NSTimeInterval( p )
 	,	target:	NSBlockOperation( block: { ed() } )
