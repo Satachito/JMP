@@ -145,13 +145,15 @@ Delay( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 
 func
 Repeat( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
-	return NSTimer.scheduledTimerWithTimeInterval(
+	let v = NSTimer.scheduledTimerWithTimeInterval(
 		NSTimeInterval( p )
 	,	target:	NSBlockOperation( block: { ed() } )
 	,	selector: "main"
 	,	userInfo: nil
 	,	repeats: true
 	)
+	v.fire()
+	return v
 }
 
 func
@@ -332,6 +334,14 @@ DeleteSharedCookies() {
 	}
 }
 
+func
+Request( p: String ) -> NSURLRequest? {
+	if let w = NSURL( string: p ) {
+		return NSURLRequest( URL: w )
+	} else {
+		return nil
+	}
+}
 
 /*
 class
