@@ -64,38 +64,19 @@ Base64String( p: NSData, _ options: NSDataBase64EncodingOptions = [] ) -> String
 	return p.base64EncodedStringWithOptions( options )
 }
 
-enum
-JMPError: ErrorType {
-	case	Base64Encode
-	case	EncodeJSON
-	case	DecodeJSON
-}
-
 func
-Base64Data( p: String, _ options: NSDataBase64DecodingOptions = [] ) throws -> NSData {
-	if let v = NSData( base64EncodedString: p, options: options ) {
-		return v
-	} else {
-		throw JMPError.Base64Encode
-	}
+Base64Data( p: String, _ options: NSDataBase64DecodingOptions = [] ) -> NSData? {
+	return NSData( base64EncodedString: p, options: options )
 }
 
 func
 EncodeJSON( p: AnyObject, _ options: NSJSONWritingOptions = [] ) throws -> NSData {
-	do {
-		return try NSJSONSerialization.dataWithJSONObject( p, options: options )
-	} catch {
-		throw JMPError.EncodeJSON
-	}
+	return try NSJSONSerialization.dataWithJSONObject( p, options: options )
 }
 
 func
 DecodeJSON( p: NSData, _ options: NSJSONReadingOptions = [] ) throws -> AnyObject {
-	do {
-		return try NSJSONSerialization.JSONObjectWithData( p, options: options )
-	} catch {
-		throw JMPError.DecodeJSON
-	}
+	return try NSJSONSerialization.JSONObjectWithData( p, options: options )
 }
 
 func
@@ -267,9 +248,7 @@ HTML(
 	let	wR = NSMutableURLRequest( URL: NSURL( string: uri )! )
 	wR.HTTPMethod = method
 	if body != nil { wR.HTTPBody = body! }
-	NSURLConnection.sendAsynchronousRequest	(	wR
-	,	queue								:	NSOperationQueue.mainQueue()
-	) {	r, d, e in
+	NSURLSession.sharedSession().dataTaskWithRequest( wR ) { d, r, e in
 		if let wE = e { er( wE ) }
 		else {
 			if let
