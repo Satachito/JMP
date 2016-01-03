@@ -40,6 +40,12 @@ RandomIndices( p: Int ) -> [ Int ] {
 }
 
 func
+ToArray<T>( start: UnsafePointer<()>, count: Int ) -> [ T ] {
+	return Array( UnsafeBufferPointer( start: UnsafePointer<T>( start ), count: count ) )
+}
+//	USAGE:	let wArray : [ Int16 ] = ToArray( data.bytes, data.length / sizeof( Int16 ) )
+
+func
 UTF8Length( p: String ) -> Int {
 	return p.lengthOfBytesUsingEncoding( NSUTF8StringEncoding )
 }
