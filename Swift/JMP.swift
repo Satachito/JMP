@@ -131,7 +131,7 @@ Delay( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 }
 
 func
-Repeat( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
+Periodical( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 	let v = NSTimer.scheduledTimerWithTimeInterval(
 		NSTimeInterval( p )
 	,	target:	NSBlockOperation( block: { ed() } )
@@ -139,7 +139,6 @@ Repeat( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 	,	userInfo: nil
 	,	repeats: true
 	)
-	v.fire()
 	return v
 }
 
