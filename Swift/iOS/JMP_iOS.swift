@@ -19,6 +19,7 @@ InputBox(
 	}
 	wAC.addAction( UIAlertAction( title: "Cancel", style: .Cancel, handler:nil ) )
 	wAC.addAction( UIAlertAction( title: "OK", style: .Default ) { _ in ed( wTF ) } )
+	wAC.view.setNeedsLayout()
 	UIApplication.sharedApplication().keyWindow!.rootViewController!.presentViewController(
 		wAC
 	,	animated:true
