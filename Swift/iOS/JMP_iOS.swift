@@ -1,6 +1,21 @@
 import UIKit
 
 func
+FrameX( p: UIView, _ x: CGFloat ) {
+	var	w = p.frame
+	w.origin.x = x
+	p.frame = w
+}
+
+func
+FrameY( p: UIView, _ y: CGFloat ) {
+	var	w = p.frame
+	w.origin.y = y
+	p.frame = w
+}
+
+
+func
 InputBox(
 	title		:	String
 , _	message		:	String? = nil
