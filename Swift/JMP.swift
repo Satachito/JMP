@@ -1,3 +1,5 @@
+//	Written by Satoru Ogura, Tokyo.
+//
 import	Foundation
 import	AddressBook
 import	CoreGraphics
@@ -46,6 +48,11 @@ ToArray<T>( start: UnsafePointer<()>, count: Int ) -> [ T ] {
 //	USAGE:	let wArray : [ Int16 ] = ToArray( data.bytes, data.length / sizeof( Int16 ) )
 
 func
+Data( p: NSURL ) -> NSData? {
+	return NSData( contentsOfURL: p )
+}
+
+func
 UTF8Length( p: String ) -> Int {
 	return p.lengthOfBytesUsingEncoding( NSUTF8StringEncoding )
 }
@@ -57,12 +64,12 @@ UTF8Data( p: String ) -> NSData? {
 
 func
 UTF8String( p: NSData ) -> String? {
-	return NSString( data:p, encoding: NSUTF8StringEncoding ) as? String
+	return String( data:p, encoding: NSUTF8StringEncoding )
 }
 
 func
 UTF8String( p: UnsafePointer<UInt8>, length: Int ) -> String? {
-	return NSString( bytes: p, length: length, encoding: NSUTF8StringEncoding ) as? String
+	return String( bytes: p, length: length, encoding: NSUTF8StringEncoding )
 }
 
 func
@@ -97,6 +104,84 @@ AsInt( p: AnyObject? ) -> Int? {
 		return w.integerValue
 	}
 	return nil
+}
+
+class
+Reader< T > {
+	var
+	_unread : T?
+	func
+	_Read() -> T? { assert( false ); return nil }
+	func
+	Read() -> T? {
+		if let v = _unread { _unread = nil; return v }
+		return _Read()
+	}
+	func
+	Unread( p: T ) { _unread = p; }
+}
+
+class
+StdinUnicodeReader: Reader< UnicodeScalar > {
+	var
+	u	= String.UnicodeScalarView()
+	override func
+	_Read() -> UnicodeScalar? {
+		while u.count == 0 {
+			if let w = readLine( stripNewline: false ) { u = w.unicodeScalars } else {
+				return nil
+			}
+		}
+		let v = u.first
+		u = u.dropFirst()
+		return v
+	}
+}
+
+class
+StdinCharacterReader: Reader< Character > {
+	var
+	u	= String.CharacterView()
+	override func
+	_Read() -> Character? {
+		while u.count == 0 {
+			if let w = readLine( stripNewline: false ) { u = w.characters } else {
+				return nil
+			}
+		}
+		let v = u.first
+		u = u.dropFirst()
+		return v
+	}
+}
+
+class
+StringUnicodeReader	: Reader< UnicodeScalar > {
+	var
+	u	: String.UnicodeScalarView
+	init( _ p: String ) { u = p.unicodeScalars }
+	override func
+	_Read() -> UnicodeScalar? {
+		if u.count == 0 { return nil }
+		let v = u.first
+		u = u.dropFirst()
+		return v
+	}
+}
+
+
+class
+StringCharacterReader: Reader< Character > {
+	var
+	u	: String.CharacterView
+	init( _ p: String ) { u = p.characters }
+	override func
+	_Read() -> Character? {
+		if u.count == 0 { return nil }
+		let v = u.first
+		u = u.dropFirst()
+		return v
+	}
 }
 
 func
@@ -214,9 +299,10 @@ BalancedPosition( p: NSData ) -> Int? {
 		} else {
 			switch wBytes[ i ] {
 			case 0x5b, 0x7b:	//	[	{
-				wBalance++
+				wBalance = wBalance + 1
 			case 0x5d, 0x7d:	//	]	}
-				if wBalance-- == 0 { return nil }
+				if wBalance == 0 { return nil }
+				wBalance = wBalance - 1
 				if wBalance == 0 { return i + 1 }
 			case 0x22:
 				wInString = true
