@@ -184,6 +184,16 @@ StringCharacterReader: Reader< Character > {
 	}
 }
 
+class
+Cell<T>	{
+	var
+	u			:	T
+	let
+	next		:	Cell?
+	init(	_ p	:	T, _ pNext: Cell? = nil ) { u = p; next = pNext }
+}
+
+
 func
 Notify( name: String, ed: NSNotification! -> () ) -> NSObjectProtocol {
 	return NSNotificationCenter.defaultCenter().addObserverForName(
