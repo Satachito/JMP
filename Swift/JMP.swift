@@ -2,21 +2,21 @@ import	Foundation
 import	AddressBook
 import	CoreGraphics
 
-func
-HexChar( p: Int ) -> Character {
-	return [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" ][ p & 0x0f ]
-}
+//func
+//HexChar( p: Int ) -> Character {
+//	return [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" ][ p & 0x0f ]
+//}
 
-func
-HexString( p: NSData ) -> String {
-	let	wBytes = UnsafePointer<Int8>( p.bytes )
-	var	v: String = ""
-	for i in 0 ..< p.length {
-		v.append( HexChar( Int( wBytes[ i ] ) >> 4 ) )
-		v.append( HexChar( Int( wBytes[ i ] ) ) )
-	}
-	return v
-}
+//func
+//HexString( p: NSData ) -> String {
+//	let	wBytes = UnsafePointer<Int8>( p.bytes )
+//	var	v: String = ""
+//	for i in 0 ..< p.length {
+//		v.append( HexChar( Int( wBytes[ i ] ) >> 4 ) )
+//		v.append( HexChar( Int( wBytes[ i ] ) ) )
+//	}
+//	return v
+//}
 
 func
 RandomData( p: Int ) -> NSData {
@@ -39,10 +39,10 @@ RandomIndices( p: Int ) -> [ Int ] {
 	return v
 }
 
-func
-ToArray<T>( start: UnsafePointer<()>, count: Int ) -> [ T ] {
-	return Array( UnsafeBufferPointer( start: UnsafePointer<T>( start ), count: count ) )
-}
+//func
+//ToArray<T>( start: UnsafePointer<()>, count: Int ) -> [ T ] {
+//	return Array( UnsafeBufferPointer( start: UnsafePointer<T>( start ), count: count ) )
+//}
 //	USAGE:	let wArray : [ Int16 ] = ToArray( data.bytes, data.length / sizeof( Int16 ) )
 
 func
