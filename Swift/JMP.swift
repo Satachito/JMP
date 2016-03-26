@@ -1,7 +1,6 @@
 //	Written by Satoru Ogura, Tokyo.
 //
 import	Foundation
-import	AddressBook
 import	CoreGraphics
 
 func
@@ -258,10 +257,7 @@ ResourceURL( resource: String, _ type: String = "" ) -> NSURL? {
 
 func
 DocumentDirectoryURLs() -> [ NSURL ] {
-	return NSFileManager.defaultManager().URLsForDirectory(
-						.DocumentDirectory
-	,	inDomains	:	.UserDomainMask
-	) as [ NSURL ]
+	return NSFileManager.defaultManager().URLsForDirectory( .DocumentDirectory, inDomains: .UserDomainMask ) as [ NSURL ]
 }
 
 func
@@ -422,73 +418,3 @@ Request( p: String ) -> NSURLRequest? {
 		return nil
 	}
 }
-
-/*
-class
-JMPSAddressBook : NSObject {
-	var	u	:	Unmanaged<ABAddressBookRef>! = nil
-
-//	deinit {
-//		if u { CFRelease( u.takeUnretainedValue() ) }
-//	}
-
-
-	func
-	grant(
-		granted	:	( JMPSAddressBook -> () )!
-	,	denied	:	( () -> () )!
-	,	error	:	( ( NSError! ) -> () )!
-	) {
-		switch ( ABAddressBookGetAuthorizationStatus() )
-		{
-		case	.Restricted,	.Denied:
-			denied();
-		case	.Authorized:
-			var e :  UnsafePointer<Unmanaged<CFError>?> = nil
-			u = ABAddressBookCreateWithOptions( nil, e )
-			if e { error( e.owner as NSError ) }
-			if u { granted( self ) }
-		case	.NotDetermined:
-			var e :  CMutablePointer<Unmanaged<CFError>?> = nil
-			u = ABAddressBookCreateWithOptions( nil, e )
-			if e { error( e.owner as NSError ) }
-			if u {
-				ABAddressBookRequestAccessWithCompletion(
-					nil
-				,	{	( qGranted: Bool , qError: CFError!  ) in
-						dispatch_async(
-							dispatch_get_main_queue()
-						,	{	if qGranted { granted( self ) }
-								else {
-									if qError	{ error( e.owner as NSError ) }
-									else		{ denied() }
-								}
-							}
-						)
-					}
-				);
-			}
-		}
-	}
-
-	func
-	granted(
-		granted		: ( ( JMPSAddressBook ) -> Void )!
-	) {
-		grant(
-			granted
-		,	{	BlockAlert(
-					"設定であなたの連絡帳にアクセスする権限を与えてください。"
-				,	"Permission was not granted for Contacts."
-				)
-			}
-		,	{	( p: NSError! ) in
-				BlockAlert(
-					p.description
-				,	"Unknown Error"
-				)
-			}
-		)
-	}
-}
-*/
