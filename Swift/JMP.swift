@@ -218,10 +218,10 @@ func
 Delay( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 	return NSTimer.scheduledTimerWithTimeInterval(
 		NSTimeInterval( p )
-	,	target:	NSBlockOperation( block: { ed() } )
-	,	selector: "main"
-	,	userInfo: nil
-	,	repeats: false
+	,	target		:	NSBlockOperation( block: { ed() } )
+	,	selector	:	#selector( NSOperation.main )
+	,	userInfo	:	nil
+	,	repeats		:	false
 	)
 }
 
@@ -229,10 +229,10 @@ func
 Periodical( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 	let v = NSTimer.scheduledTimerWithTimeInterval(
 		NSTimeInterval( p )
-	,	target:	NSBlockOperation( block: { ed() } )
-	,	selector: "main"
-	,	userInfo: nil
-	,	repeats: true
+	,	target		:	NSBlockOperation( block: { ed() } )
+	,	selector	:	#selector( NSOperation.main )
+	,	userInfo	:	nil
+	,	repeats		:	true
 	)
 	return v
 }
