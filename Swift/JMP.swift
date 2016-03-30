@@ -3,21 +3,21 @@
 import	Foundation
 import	CoreGraphics
 
-//func
-//HexChar( p: Int ) -> Character {
-//	return [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" ][ p & 0x0f ]
-//}
+func
+HexChar( p: Int ) -> Character {
+	return [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" ][ p & 0x0f ]
+}
 
-//func
-//HexString( p: NSData ) -> String {
-//	let	wBytes = UnsafePointer<Int8>( p.bytes )
-//	var	v: String = ""
-//	for i in 0 ..< p.length {
-//		v.append( HexChar( Int( wBytes[ i ] ) >> 4 ) )
-//		v.append( HexChar( Int( wBytes[ i ] ) ) )
-//	}
-//	return v
-//}
+func
+HexString( p: NSData ) -> String {
+	let	wBytes = UnsafePointer<Int8>( p.bytes )
+	var	v: String = ""
+	for i in 0 ..< p.length {
+		v.append( HexChar( Int( wBytes[ i ] ) >> 4 ) )
+		v.append( HexChar( Int( wBytes[ i ] ) ) )
+	}
+	return v
+}
 
 func
 RandomData( p: Int ) -> NSData {
@@ -40,10 +40,10 @@ RandomIndices( p: Int ) -> [ Int ] {
 	return v
 }
 
-//func
-//ToArray<T>( start: UnsafePointer<()>, count: Int ) -> [ T ] {
-//	return Array( UnsafeBufferPointer( start: UnsafePointer<T>( start ), count: count ) )
-//}
+func
+ToArray<T>( start: UnsafePointer<T>, count: Int ) -> [ T ] {
+	return Array( UnsafeBufferPointer( start: UnsafePointer<T>( start ), count: count ) )
+}
 //	USAGE:	let wArray : [ Int16 ] = ToArray( data.bytes, data.length / sizeof( Int16 ) )
 
 func
@@ -123,16 +123,16 @@ Reader< T > {
 class
 StdinUnicodeReader: Reader< UnicodeScalar > {
 	var
-	u	= String.UnicodeScalarView()
+	m	= String.UnicodeScalarView()
 	override func
 	_Read() -> UnicodeScalar? {
-		while u.count == 0 {
-			if let w = readLine( stripNewline: false ) { u = w.unicodeScalars } else {
+		while m.count == 0 {
+			if let w = readLine( stripNewline: false ) { m = w.unicodeScalars } else {
 				return nil
 			}
 		}
-		let v = u.first
-		u = u.dropFirst()
+		let v = m.first
+		m = m.dropFirst()
 		return v
 	}
 }
@@ -140,16 +140,16 @@ StdinUnicodeReader: Reader< UnicodeScalar > {
 class
 StdinCharacterReader: Reader< Character > {
 	var
-	u	= String.CharacterView()
+	m	= String.CharacterView()
 	override func
 	_Read() -> Character? {
-		while u.count == 0 {
-			if let w = readLine( stripNewline: false ) { u = w.characters } else {
+		while m.count == 0 {
+			if let w = readLine( stripNewline: false ) { m = w.characters } else {
 				return nil
 			}
 		}
-		let v = u.first
-		u = u.dropFirst()
+		let v = m.first
+		m = m.dropFirst()
 		return v
 	}
 }
@@ -157,13 +157,13 @@ StdinCharacterReader: Reader< Character > {
 class
 StringUnicodeReader	: Reader< UnicodeScalar > {
 	var
-	u	: String.UnicodeScalarView
-	init( _ p: String ) { u = p.unicodeScalars }
+	m	: String.UnicodeScalarView
+	init( _ a: String ) { m = a.unicodeScalars }
 	override func
 	_Read() -> UnicodeScalar? {
-		if u.count == 0 { return nil }
-		let v = u.first
-		u = u.dropFirst()
+		if m.count == 0 { return nil }
+		let v = m.first
+		m = m.dropFirst()
 		return v
 	}
 }
@@ -172,13 +172,13 @@ StringUnicodeReader	: Reader< UnicodeScalar > {
 class
 StringCharacterReader: Reader< Character > {
 	var
-	u	: String.CharacterView
-	init( _ p: String ) { u = p.characters }
+	m	: String.CharacterView
+	init( _ a: String ) { m = a.characters }
 	override func
 	_Read() -> Character? {
-		if u.count == 0 { return nil }
-		let v = u.first
-		u = u.dropFirst()
+		if m.count == 0 { return nil }
+		let v = m.first
+		m = m.dropFirst()
 		return v
 	}
 }
@@ -186,10 +186,10 @@ StringCharacterReader: Reader< Character > {
 class
 Cell<T>	{
 	var
-	u			:	T
+	m			:	T
 	let
 	next		:	Cell?
-	init(	_ p	:	T, _ pNext: Cell? = nil ) { u = p; next = pNext }
+	init(	_ a	:	T, _ pNext: Cell? = nil ) { m = a; next = pNext }
 }
 
 
