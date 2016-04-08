@@ -213,22 +213,22 @@ Sub( ed: () -> () ) {
 	dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0 ), ed )
 }
 
-func
-Delay( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
-	return NSTimer.scheduledTimerWithTimeInterval(
-		NSTimeInterval( p )
-	,	target		:	NSBlockOperation( block: { ed() } )
-	,	selector	:	#selector( NSOperation.main )
-	,	userInfo	:	nil
-	,	repeats		:	false
-	)
-}
+//func
+//Delay( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
+//	return NSTimer.scheduledTimerWithTimeInterval(
+//		NSTimeInterval( p )
+//	,	target		:	NSBlockOperation( block: { ed() } )
+//	,	selector	:	#selector( NSOperation.main )
+//	,	userInfo	:	nil
+//	,	repeats		:	false
+//	)
+//}
 
 func
 Periodical( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 	let v = NSTimer.scheduledTimerWithTimeInterval(
 		NSTimeInterval( p )
-	,	target		:	NSBlockOperation( block: { ed() } )
+	,	target		:	NSBlockOperation( block: { Main{ ed() } } )
 	,	selector	:	#selector( NSOperation.main )
 	,	userInfo	:	nil
 	,	repeats		:	true
@@ -237,7 +237,7 @@ Periodical( p: NSTimeInterval, ed: () -> () ) -> NSTimer {
 }
 
 func
-Delay( p: NSTimeInterval, _ queue: dispatch_queue_t, ed: () -> () ) {
+Delay( p: NSTimeInterval, _ queue: dispatch_queue_t = dispatch_get_main_queue(), ed: () -> () ) {
 	dispatch_after(
 		dispatch_time( DISPATCH_TIME_NOW, Int64( p * NSTimeInterval( NSEC_PER_SEC ) ) )
 	,	queue
