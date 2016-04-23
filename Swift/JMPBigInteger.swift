@@ -1,3 +1,5 @@
+//	Written by Satoru Ogura, Tokyo.
+//
 import Foundation
 
 typealias	E		= UInt32

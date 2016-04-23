@@ -105,16 +105,20 @@ AsInt( p: AnyObject? ) -> Int? {
 	return nil
 }
 
+enum
+ReaderError		:	ErrorType {
+case				EOD
+}
 class
 Reader< T > {
 	var
 	_unread : T?
 	func
-	_Read() -> T? { assert( false ); return nil }
+	_Read() throws -> T { throw ReaderError.EOD }
 	func
-	Read() -> T? {
+	Read() throws -> T {
 		if let v = _unread { _unread = nil; return v }
-		return _Read()
+		return try _Read()
 	}
 	func
 	Unread( p: T ) { _unread = p; }
@@ -125,15 +129,13 @@ StdinUnicodeReader: Reader< UnicodeScalar > {
 	var
 	m	= String.UnicodeScalarView()
 	override func
-	_Read() -> UnicodeScalar? {
+	_Read() throws -> UnicodeScalar {
 		while m.count == 0 {
-			if let w = readLine( stripNewline: false ) { m = w.unicodeScalars } else {
-				return nil
-			}
+			if let w = readLine( stripNewline: false ) { m = w.unicodeScalars } else { throw ReaderError.EOD }
 		}
 		let v = m.first
 		m = m.dropFirst()
-		return v
+		return v!
 	}
 }
 
@@ -142,15 +144,13 @@ StdinCharacterReader: Reader< Character > {
 	var
 	m	= String.CharacterView()
 	override func
-	_Read() -> Character? {
+	_Read() throws -> Character {
 		while m.count == 0 {
-			if let w = readLine( stripNewline: false ) { m = w.characters } else {
-				return nil
-			}
+			if let w = readLine( stripNewline: false ) { m = w.characters } else { throw ReaderError.EOD }
 		}
 		let v = m.first
 		m = m.dropFirst()
-		return v
+		return v!
 	}
 }
 
@@ -160,11 +160,11 @@ StringUnicodeReader	: Reader< UnicodeScalar > {
 	m	: String.UnicodeScalarView
 	init( _ a: String ) { m = a.unicodeScalars }
 	override func
-	_Read() -> UnicodeScalar? {
-		if m.count == 0 { return nil }
+	_Read() throws -> UnicodeScalar {
+		if m.count == 0 { throw ReaderError.EOD }
 		let v = m.first
 		m = m.dropFirst()
-		return v
+		return v!
 	}
 }
 
@@ -175,11 +175,11 @@ StringCharacterReader: Reader< Character > {
 	m	: String.CharacterView
 	init( _ a: String ) { m = a.characters }
 	override func
-	_Read() -> Character? {
-		if m.count == 0 { return nil }
+	_Read() throws -> Character {
+		if m.count == 0 { throw ReaderError.EOD }
 		let v = m.first
 		m = m.dropFirst()
-		return v
+		return v!
 	}
 }
 
