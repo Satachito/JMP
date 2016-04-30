@@ -307,7 +307,7 @@ _Minus( b: [ E ], _ s: [ E ] ) -> [ E ] {
 }
 func
 Minus( l: [ E ], _ r: [ E ] ) -> ( reverse: Bool, [ E ] ) {
-	return l.count >= r.count
+	return _Compare( l, r ) >= 0
 	?	( false, _Minus( l, r ) )
 	:	(  true, _Minus( r, l ) )
 }

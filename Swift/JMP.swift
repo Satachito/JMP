@@ -105,6 +105,30 @@ AsInt( p: AnyObject? ) -> Int? {
 	return nil
 }
 
+//	Assuming the Data is BD
+//	Search: A Result:	[]
+//	Search: B Result:	[ 0 ]
+//	Search: C Result:	[ 0, 1 ]
+//	Search: D Result:	[ 1 ]
+//	Search: E Result:	[]
+
+func
+BinarySearch< T: Comparable >( a: T, _ b: [ T ] ) -> [ Int ] {
+	switch b.count {
+	case 0:	return []
+	case 1:	return a == b[ 0 ] ? [ 0 ] : []
+	default:
+		if a < b.first || a > b.last { return [] }
+		var ( l, h ) = ( 0, b.count - 1 )
+		while h - l > 1 {
+			let m = ( l + h ) / 2
+			if a == b[ m ] { return [ m ] }
+			if a < b[ m ] { h = m } else { l = m }
+		}
+		return [ l, h ]
+	}
+}
+
 enum
 ReaderError		:	ErrorType {
 case				EOD
@@ -180,6 +204,17 @@ StringCharacterReader: Reader< Character > {
 		let v = m.first
 		m = m.dropFirst()
 		return v!
+	}
+}
+
+func
+SkipWhite( r: Reader< UnicodeScalar > ) throws {
+	while true {
+		let u = try r.Read()
+		if !NSCharacterSet.whitespaceAndNewlineCharacterSet().longCharacterIsMember( u.value ) {
+			r.Unread( u )
+			break
+		}
 	}
 }
 
@@ -367,7 +402,7 @@ HTML(
 func
 JSON(
 	uri		: String
-, _	method	: String
+, _	method	: String = "GET"
 , _	json	: AnyObject? = nil
 , _	er		: ( NSError ) -> () = { e in }
 , _	ex		: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
