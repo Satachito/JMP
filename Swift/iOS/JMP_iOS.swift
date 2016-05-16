@@ -43,8 +43,8 @@ InputBox(
 }
 	
 func
-Animate( p: () -> () ) {
-	UIView.animateWithDuration( 0.25, animations: p )
+Animate( duration: NSTimeInterval = 0.25, p: () -> () ) {
+	UIView.animateWithDuration( duration, animations: p )
 }
 
 func
