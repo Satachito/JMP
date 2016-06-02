@@ -188,7 +188,7 @@ HTML_iOS(
 , _	ex		: ( NSHTTPURLResponse, NSData ) -> () = { r, d in HTMLAlert( r, d ) }
 , _	ed		: NSData -> () = { p in }
 ) {
-	HTML( uri, method, body, er, ex, ed )
+	OnHTML( uri, method, body, er, ex, ed )
 }
 
 func
@@ -200,7 +200,7 @@ JSON_iOS(
 , _	ex		: ( NSHTTPURLResponse, NSData ) -> () = { r, d in HTMLAlert( r, d ) }
 , _	ed		: AnyObject -> ()
 ) {
-	JSON( uri, method, json, er, ex, ed )
+	OnJSON( uri, method, json, er, ex, ed )
 }
 
 func
@@ -210,7 +210,7 @@ Image_iOS(
 , _	ex	: ( NSHTTPURLResponse, NSData ) -> () = { r, d in HTMLAlert( r, d ) }
 , _	ed	: UIImage -> ()
 ) {
-	HTML( uri, "GET", nil, er, ex ) { p in
+	OnHTML( uri, "GET", nil, er, ex ) { p in
 		if let wImage = UIImage( data: p ) {
 			ed( wImage )
 		} else {

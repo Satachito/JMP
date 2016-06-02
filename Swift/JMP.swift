@@ -47,6 +47,11 @@ ToArray<T>( start: UnsafePointer<T>, count: Int ) -> [ T ] {
 //	USAGE:	let wArray : [ Int16 ] = ToArray( data.bytes, data.length / sizeof( Int16 ) )
 
 func
+URL( p: String ) -> NSURL? {
+	return NSURL( string: p )
+}
+
+func
 Data( p: NSURL ) -> NSData? {
 	return NSData( contentsOfURL: p )
 }
@@ -316,6 +321,28 @@ Center( p: CGRect ) -> CGPoint {
 	return CGPointMake( CGRectGetMidX( p ), CGRectGetMidY( p ) )
 }
 
+typealias	JSONDict = [ String: AnyObject ]
+
+func
+JSON( a: String ) -> AnyObject? {
+	if	let	wURL = URL( a )
+	,	let	wData = Data( wURL ) {
+		return try? DecodeJSON( wData )
+	} else {
+		return nil
+	}
+}
+
+func
+ArrayJSON( a: String ) -> [ AnyObject ]? {
+	return JSON( a ) as? [ AnyObject ]
+}
+
+func
+DictJSON( a: String ) -> JSONDict? {
+	return JSON( a ) as? JSONDict
+}
+
 func
 BalancedPosition( p: NSData ) -> Int? {
 	let	wBytes = UnsafePointer<UInt8>( p.bytes )
@@ -369,7 +396,7 @@ JSONForAll( data: NSMutableData, _ p: AnyObject -> () ) {
 }
 
 func
-HTML(
+OnHTML(
 	uri		: String
 , _	method	: String
 , _	body	: NSData? = nil
@@ -377,7 +404,7 @@ HTML(
 , _	ex		: ( NSHTTPURLResponse, NSData ) -> () = { r, d in }
 , _	ed		: NSData -> () = { p in }
 ) {
-	let	wR = NSMutableURLRequest( URL: NSURL( string: uri )! )
+	let	wR = NSMutableURLRequest( URL: URL( uri )! )
 	wR.HTTPMethod = method
 	if body != nil { wR.HTTPBody = body! }
 	NSURLSession.sharedSession().dataTaskWithRequest( wR ) { d, r, e in
@@ -400,7 +427,7 @@ HTML(
 }
 
 func
-JSON(
+OnJSON(
 	uri		: String
 , _	method	: String = "GET"
 , _	json	: AnyObject? = nil
@@ -411,7 +438,7 @@ JSON(
 	do {
 		var	wBody	:	NSData?
 		if let wJSON = json { wBody = try EncodeJSON( wJSON ) }
-		HTML( uri, method, wBody, er, ex ) { p in
+		OnHTML( uri, method, wBody, er, ex ) { p in
 			do {
 				ed( try DecodeJSON( p ) )
 			} catch let e as NSError {
@@ -426,8 +453,6 @@ JSON(
 		assert( false )
 	}
 }
-
-typealias	JSONDict = [ String: AnyObject ]
 
 
 func
@@ -447,7 +472,7 @@ DeleteSharedCookies() {
 
 func
 Request( p: String ) -> NSURLRequest? {
-	if let w = NSURL( string: p ) {
+	if let w = URL( p ) {
 		return NSURLRequest( URL: w )
 	} else {
 		return nil
