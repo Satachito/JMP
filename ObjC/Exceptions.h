@@ -11,7 +11,7 @@
 
 #include	<errno.h>
 #include	<string.h>
-#include	<cassert>
+#include	<assert.h>
 
 #ifdef __OBJC__
 #import		<Foundation/Foundation.h>
